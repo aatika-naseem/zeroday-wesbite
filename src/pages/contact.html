@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Intake // ZERO//DAY</title>
+  <meta name="description" content="Submit your request. We don't ask. We don't tell. We deliver." />
+  <link rel="icon" type="image/svg+xml" href="../../assets/icons/favicon.svg" />
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    /* ============ GLOBAL DARK AMBIENCE ============ */
+    body {
+      background-color: #050505;
+      background-image:
+        radial-gradient(circle at 20% 30%, rgba(127, 0, 0, 0.08), transparent 45%),
+        radial-gradient(circle at 80% 70%, rgba(0, 127, 127, 0.05), transparent 45%),
+        repeating-linear-gradient(
+          0deg,
+          rgba(255, 255, 255, 0.015) 0px,
+          rgba(255, 255, 255, 0.015) 1px,
+          transparent 1px,
+          transparent 3px
+        );
+      color: #b8b8b8;
+      font-family: 'Courier New', monospace;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 0, 0, 0.015);
+      pointer-events: none;
+      z-index: 9999;
+      animation: flicker 4s infinite;
+    }
+
+    @keyframes flicker {
+      0%, 100% { opacity: 0.4; }
+      3% { opacity: 0.1; }
+      6% { opacity: 0.5; }
+      7% { opacity: 0.2; }
+      50% { opacity: 0.4; }
+      52% { opacity: 0.7; }
+      53% { opacity: 0.2; }
+    }
+
+    /* ============ GLITCH TEXT ============ */
+    @keyframes glitch {
+      0%, 100% { text-shadow: 2px 0 #dc2626, -2px 0 #22d3ee55; transform: translate(0); }
+      10% { text-shadow: -3px 0 #dc2626, 3px 0 #22d3ee55; transform: translate(-1px, 1px); }
+      20% { text-shadow: 2px 0 #dc2626, -2px 0 #22d3ee55; transform: translate(1px, -1px); }
+      30% { text-shadow: -2px 0 #dc2626, 2px 0 #22d3ee55; transform: translate(0); }
+      80% { text-shadow: 2px 0 #dc2626, -2px 0 #22d3ee55; transform: translate(1px, 0); }
+      90% { text-shadow: -3px 0 #dc2626, 3px 0 #22d3ee55; transform: translate(-1px, -1px); }
+    }
+    .glitch {
+      animation: glitch 3s infinite steps(1);
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 15px rgba(220, 38, 38, 0.15), inset 0 0 20px rgba(0, 0, 0, 0.5); }
+      50% { box-shadow: 0 0 35px rgba(220, 38, 38, 0.35), inset 0 0 30px rgba(0, 0, 0, 0.6); }
+    }
+    .pulse-border {
+      animation: pulse-glow 5s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+    .cursor-blink::after {
+      content: "▋";
+      color: #dc2626;
+      animation: blink 1s infinite;
+      margin-left: 4px;
+    }
+
+    @keyframes ticker {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .ticker {
+      display: inline-block;
+      white-space: nowrap;
+      animation: ticker 30s linear infinite;
+    }
+
+    /* ============ INPUTS (BIG FONT) ============ */
+    .cyber-input {
+      background: rgba(0, 0, 0, 0.7);
+      border: 1px solid #1f1f1f;
+      color: #e5e5e5;
+      transition: all 0.25s ease;
+      font-family: 'Courier New', monospace;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+    .cyber-input::placeholder {
+      color: #4a4a4a;
+      font-style: italic;
+      font-size: 15px;
+    }
+    .cyber-input:focus {
+      outline: none;
+      border-color: #dc2626;
+      background: rgba(10, 0, 0, 0.9);
+      box-shadow: 0 0 15px rgba(220, 38, 38, 0.4), inset 0 0 8px rgba(220, 38, 38, 0.15);
+    }
+    .cyber-input:hover:not(:focus) {
+      border-color: #404040;
+    }
+
+    /* ============ TERMINAL RADIO (BIGGER) ============ */
+    .terminal-radio {
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border: 1px solid #555;
+      background: #0a0a0a;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .terminal-radio:checked {
+      background: #dc2626;
+      border-color: #dc2626;
+      box-shadow: 0 0 10px #dc2626;
+    }
+    .terminal-radio:checked::after {
+      content: "×";
+      position: absolute;
+      inset: 0;
+      color: #000;
+      font-weight: bold;
+      font-size: 16px;
+      line-height: 18px;
+      text-align: center;
+    }
+
+    /* ============ BUTTON ============ */
+    .btn-danger {
+      background: transparent;
+      border: 2px solid #dc2626;
+      color: #dc2626;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.2s ease;
+      letter-spacing: 0.15em;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .btn-danger::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: #dc2626;
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+      z-index: 0;
+    }
+    .btn-danger:hover::before {
+      transform: translateX(0);
+    }
+    .btn-danger:hover {
+      color: #000;
+      box-shadow: 0 0 30px #dc2626, 0 0 60px rgba(220, 38, 38, 0.4);
+    }
+    .btn-danger span {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ============ SECTION LABEL ============ */
+    .section-label {
+      font-size: 14px;
+      letter-spacing: 0.25em;
+      color: #dc2626;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+    .section-label::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      background: #dc2626;
+      box-shadow: 0 0 8px #dc2626;
+      flex-shrink: 0;
+    }
+
+    /* ============ FIELD LABEL ============ */
+    .field-label {
+      display: block;
+      font-size: 13px;
+      letter-spacing: 0.15em;
+      color: #9ca3af;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    /* ============ OPTION TEXT ============ */
+    .option-text {
+      font-size: 15px;
+      line-height: 1.5;
+      color: #d1d5db;
+    }
+
+    /* ============ MODAL ============ */
+    .modal-overlay {
+      background: rgba(0, 0, 0, 0.92);
+      backdrop-filter: blur(4px);
+    }
+
+    .warning-stripes {
+      background: repeating-linear-gradient(
+        45deg,
+        #dc2626,
+        #dc2626 10px,
+        #000 10px,
+        #000 20px
+      );
+      height: 4px;
+    }
+
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0a0a0a; }
+    ::-webkit-scrollbar-thumb { background: #dc2626; }
+    ::-webkit-scrollbar-thumb:hover { background: #ef4444; }
+
+    @keyframes textReveal {
+      from { opacity: 0; filter: blur(8px); }
+      to { opacity: 1; filter: blur(0); }
+    }
+    .reveal {
+      animation: textReveal 0.8s ease-out forwards;
+    }
+    .reveal-delay-1 { animation-delay: 0.2s; opacity: 0; }
+    .reveal-delay-2 { animation-delay: 0.4s; opacity: 0; }
+    .reveal-delay-3 { animation-delay: 0.6s; opacity: 0; }
+    .reveal-delay-4 { animation-delay: 0.8s; opacity: 0; }
+
+    .noise::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
+      pointer-events: none;
+      mix-blend-mode: overlay;
+    }
+
+    /* Success panel transition */
+    #successPanel {
+      transition: opacity 0.5s ease;
+    }
+  </style>
+</head>
+<body class="min-h-screen text-gray-300 font-mono antialiased selection:bg-red-500 selection:text-black">
+
+  <!-- ===== NAVBAR (same as index.html, with links fixed for src/pages/) ===== -->
+  <nav class="sticky top-0 z-50 bg-black/80 backdrop-blur border-b border-red-600/30">
+    <div class="max-w-6xl mx-auto flex items-center justify-between px-4 py-4">
+
+      <a href="../../index.html" class="font-mono text-2xl font-bold tracking-widest text-white">
+        ZERO<span class="text-red-500">//</span>DAY
+      </a>
+
+      <ul class="hidden md:flex items-center gap-8 text-sm uppercase tracking-wider">
+        <li><a href="../../index.html" class="hover:text-white">Home</a></li>
+        <li><a href="about.html" class="hover:text-white">About</a></li>
+        <li><a href="services.html" class="hover:text-white">Services</a></li>
+        <li><a href="contact.html" class="text-white border-b-2 border-red-600 pb-1">Contact</a></li>
+        <li><a href="signin.html" class="hover:text-white">Sign In</a></li>
+        <li>
+          <a href="signup.html"
+             class="rounded-full border border-red-600 px-5 py-2 text-red-500 hover:bg-red-600 hover:text-white transition">
+            Sign Up
+          </a>
+        </li>
+      </ul>
+
+      <button id="menu-btn" class="md:hidden text-3xl text-white">☰</button>
+    </div>
+
+    <ul id="mobile-menu" class="hidden md:hidden flex-col gap-3 px-4 pb-4 text-sm uppercase tracking-wider">
+      <li><a href="../../index.html" class="text-white">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="contact.html" class="text-red-500">Contact</a></li>
+      <li><a href="signin.html">Sign In</a></li>
+      <li><a href="signup.html">Sign Up</a></li>
+    </ul>
+  </nav>
+
+  <!-- TOP WARNING TICKER -->
+  <div class="w-full bg-red-950/40 border-b border-red-900/50 py-2 overflow-hidden text-sm text-red-500/80 tracking-widest uppercase">
+    <div class="ticker">
+      ⚠ UNAUTHORIZED ACCESS WILL BE TRACED ⚠ &nbsp;&nbsp;&nbsp; • &nbsp;&nbsp;&nbsp; ALL TRANSMISSIONS ENCRYPTED WITH PGP-4096 &nbsp;&nbsp;&nbsp; • &nbsp;&nbsp;&nbsp; WE DO NOT KEEP LOGS &nbsp;&nbsp;&nbsp; • &nbsp;&nbsp;&nbsp; USE TOR FOR MAXIMUM ANONYMITY &nbsp;&nbsp;&nbsp; • &nbsp;&nbsp;&nbsp; PLausible deniability maintained &nbsp;&nbsp;&nbsp; • &nbsp;&nbsp;&nbsp;
+      ⚠ UNAUTHORIZED ACCESS WILL BE TRACED ⚠ &nbsp;&nbsp;&nbsp; • &nbsp;&nbsp;&nbsp; ALL TRANSMISSIONS ENCRYPTED WITH PGP-4096 &nbsp;&nbsp;&nbsp; • &nbsp;&nbsp;&nbsp; WE DO NOT KEEP LOGS &nbsp;&nbsp;&nbsp; • &nbsp;&nbsp;&nbsp; USE TOR FOR MAXIMUM ANONYMITY &nbsp;&nbsp;&nbsp; • &nbsp;&nbsp;&nbsp; PLausible deniability maintained &nbsp;&nbsp;&nbsp; • &nbsp;&nbsp;&nbsp;
+    </div>
+  </div>
+
+  <div class="max-w-3xl mx-auto px-4 py-8 md:py-12 relative z-10">
+
+    <!-- Hero -->
+    <section class="text-center mb-10">
+      <div class="text-sm tracking-[0.5em] text-red-600/60 mb-3 reveal">
+        [ CLASSIFIED INTAKE PROTOCOL ]
+      </div>
+
+      <h1 class="text-4xl md:text-6xl font-bold tracking-tight text-white glitch reveal reveal-delay-1">
+        <span class="text-red-600">&gt;</span> OPEN<span class="text-red-600">/</span>LINE
+      </h1>
+
+      <p class="mt-4 text-base text-gray-400 max-w-md mx-auto leading-relaxed reveal reveal-delay-2">
+        You've found us. That already says something about you.
+        <br />
+        <span class="text-red-500/80 italic">We don't judge. We don't ask. We deliver.</span>
+      </p>
+
+      <div class="mt-6 flex items-center justify-center gap-3">
+        <div class="h-px w-16 bg-gradient-to-r from-transparent to-red-800"></div>
+        <span class="text-red-600 text-base">⛧</span>
+        <div class="h-px w-16 bg-gradient-to-l from-transparent to-red-800"></div>
+      </div>
+    </section>
+
+    <!-- DISCLAIMER MODAL -->
+    <div id="disclaimerModal" class="fixed inset-0 z-50 flex items-center justify-center px-4 modal-overlay">
+      <div class="max-w-lg w-full bg-black border border-red-900/60 pulse-border relative noise">
+        <div class="warning-stripes"></div>
+        <div class="p-6 md:p-8">
+          <div class="text-red-600 text-4xl mb-3 text-center">⚠</div>
+          <h2 class="text-center text-red-500 tracking-widest text-lg mb-4 font-bold">
+            READ BEFORE PROCEEDING
+          </h2>
+          <div class="text-gray-300 text-base leading-relaxed space-y-3 border-l-2 border-red-900/50 pl-4">
+            <p>
+              By continuing, you acknowledge that <span class="text-red-400">ZERO//DAY</span> operates in the
+              <span class="text-red-400">gray spaces</span> between what is legal and what is necessary.
+            </p>
+            <p>
+              We do not work with law enforcement. We do not work with those who waste our time.
+              We <span class="text-red-400">do</span> work with people who need problems solved — quietly,
+              permanently, and without a trail.
+            </p>
+            <p class="text-red-500/90">
+              If you're here to play games, leave now. If you're here because you're out of options —
+              <span class="cursor-blink">proceed</span>
+            </p>
+          </div>
+          <button
+            type="button"
+            onclick="closeDisclaimer()"
+            class="mt-6 w-full btn-danger py-3 font-bold"
+          >
+            <span>I UNDERSTAND // ENTER</span>
+          </button>
+          <p class="text-center text-sm text-gray-600 mt-3 tracking-widest">
+            NO COOKIES · NO TRACKING · NO JUDGEMENT
+          </p>
+        </div>
+        <div class="warning-stripes"></div>
+      </div>
+    </div>
+
+    <!-- MAIN FORM -->
+    <div id="mainContent" class="opacity-0 transition-opacity duration-1000">
+      <div class="relative bg-black/80 backdrop-blur border border-red-900/40 p-6 md:p-8 shadow-[0_0_40px_rgba(220,38,38,0.1)]">
+
+        <!-- Terminal bar -->
+        <div class="flex items-center justify-between mb-6 pb-3 border-b border-red-900/30">
+          <div class="flex items-center gap-2">
+            <div class="w-3 h-3 rounded-full bg-red-600/70"></div>
+            <div class="w-3 h-3 rounded-full bg-yellow-600/50"></div>
+            <div class="w-3 h-3 rounded-full bg-green-600/50"></div>
+            <span class="ml-3 text-sm text-gray-500 tracking-widest">intake_form.enc</span>
+          </div>
+          <span class="text-sm text-red-700/60 tracking-widest">● REC</span>
+        </div>
+
+        <!-- FORMSPREE FORM -->
+        <form
+          id="intakeForm"
+          action="https://formspree.io/f/mnpneaqg"
+          method="POST"
+          class="space-y-8"
+        >
+
+          <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
+
+          <!-- SECTION 01 -->
+          <div class="space-y-4">
+            <div class="section-label">01 // IDENTITY (OR LACK THEREOF)</div>
+
+            <div class="grid md:grid-cols-2 gap-4">
+              <div>
+                <label class="field-label">
+                  ALIAS <span class="text-red-800">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="alias"
+                  name="alias"
+                  required
+                  placeholder="gh0st_32"
+                  class="cyber-input w-full px-4 py-3"
+                />
+              </div>
+              <div>
+                <label class="field-label">
+                  SECURE CONTACT <span class="text-red-800">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="contact"
+                  name="contact"
+                  required
+                  placeholder="protonmail / session id / pgp"
+                  class="cyber-input w-full px-4 py-3"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label class="field-label">
+                WHO ARE YOU TO US? <span class="text-gray-600 italic normal-case">(optional — but it tells us a lot)</span>
+              </label>
+              <select
+                id="clientType"
+                name="clientType"
+                class="cyber-input w-full px-4 py-3 appearance-none cursor-pointer"
+                style="background-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23dc2626' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E&quot;); background-repeat: no-repeat; background-position: right 16px center;"
+              >
+                <option value="" class="bg-black">-- REDACTED BY DEFAULT --</option>
+                <option value="individual" class="bg-black">A PRIVATE INDIVIDUAL</option>
+                <option value="business" class="bg-black">A BUSINESS WITH "ISSUES"</option>
+                <option value="gov" class="bg-black">GOVERNMENT ADJACENT</option>
+                <option value="competitor" class="bg-black">A COMPETITOR LOOKING FOR AN EDGE</option>
+                <option value="desperate" class="bg-black">SOMEONE WHO'S OUT OF OPTIONS</option>
+                <option value="curious" class="bg-black">JUST... CURIOUS</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- SECTION 02 -->
+          <div class="space-y-4">
+            <div class="section-label">02 // THE REQUEST</div>
+
+            <div>
+              <label class="field-label">
+                WHAT ARE YOU WILLING TO DO? <span class="text-red-800">*</span>
+                <span class="text-gray-600 italic normal-case">(choose all that apply)</span>
+              </label>
+              <div class="space-y-3">
+                <label class="flex items-start gap-3 cursor-pointer group">
+                  <input type="checkbox" name="willing[]" class="terminal-radio mt-0.5" value="Pay above market rate for silence and speed" data-willing />
+                  <span class="option-text group-hover:text-red-400 transition-colors">Pay above market rate for silence and speed</span>
+                </label>
+                <label class="flex items-start gap-3 cursor-pointer group">
+                  <input type="checkbox" name="willing[]" class="terminal-radio mt-0.5" value="Look the other way if methods get unconventional" data-willing />
+                  <span class="option-text group-hover:text-red-400 transition-colors">Look the other way if methods get <span class="text-red-600">unconventional</span></span>
+                </label>
+                <label class="flex items-start gap-3 cursor-pointer group">
+                  <input type="checkbox" name="willing[]" class="terminal-radio mt-0.5" value="Deny any knowledge of this conversation if asked" data-willing />
+                  <span class="option-text group-hover:text-red-400 transition-colors">Deny any knowledge of this conversation if asked</span>
+                </label>
+                <label class="flex items-start gap-3 cursor-pointer group">
+                  <input type="checkbox" name="willing[]" class="terminal-radio mt-0.5" value="Burn this channel after we're done" data-willing />
+                  <span class="option-text group-hover:text-red-400 transition-colors">Burn this channel after we're done — no history, no trace</span>
+                </label>
+                <label class="flex items-start gap-3 cursor-pointer group">
+                  <input type="checkbox" name="willing[]" class="terminal-radio mt-0.5" value="Cross lines I wouldn't normally cross" data-willing />
+                  <span class="option-text group-hover:text-red-400 transition-colors">Cross lines I wouldn't normally cross if the result justifies it</span>
+                </label>
+              </div>
+            </div>
+
+            <div>
+              <label class="field-label">
+                DESCRIBE THE SITUATION <span class="text-red-800">*</span>
+              </label>
+              <textarea
+                id="situation"
+                name="situation"
+                required
+                rows="6"
+                placeholder="Be specific. Vague requests get vague results. If you're being watched, say so. If someone needs to disappear, say that too. We've heard worse."
+                class="cyber-input w-full px-4 py-3 resize-y min-h-[160px]"
+              ></textarea>
+            </div>
+
+            <div>
+              <label class="field-label">
+                WHAT'S THE DEADLINE?
+              </label>
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                <label class="cursor-pointer">
+                  <input type="radio" name="urgency" value="Yesterday" class="terminal-radio sr-only peer" />
+                  <div class="text-center text-sm py-3 border border-gray-800 peer-checked:border-red-600 peer-checked:text-red-500 peer-checked:bg-red-950/20 hover:border-gray-600 transition-all tracking-widest">
+                    YESTERDAY
+                  </div>
+                </label>
+                <label class="cursor-pointer">
+                  <input type="radio" name="urgency" value="48 hours" class="terminal-radio sr-only peer" />
+                  <div class="text-center text-sm py-3 border border-gray-800 peer-checked:border-red-600 peer-checked:text-red-500 peer-checked:bg-red-950/20 hover:border-gray-600 transition-all tracking-widest">
+                    48 HOURS
+                  </div>
+                </label>
+                <label class="cursor-pointer">
+                  <input type="radio" name="urgency" value="This week" class="terminal-radio sr-only peer" />
+                  <div class="text-center text-sm py-3 border border-gray-800 peer-checked:border-red-600 peer-checked:text-red-500 peer-checked:bg-red-950/20 hover:border-gray-600 transition-all tracking-widest">
+                    THIS WEEK
+                  </div>
+                </label>
+                <label class="cursor-pointer">
+                  <input type="radio" name="urgency" value="When it's done" class="terminal-radio sr-only peer" />
+                  <div class="text-center text-sm py-3 border border-gray-800 peer-checked:border-red-600 peer-checked:text-red-500 peer-checked:bg-red-950/20 hover:border-gray-600 transition-all tracking-widest">
+                    WHEN IT'S DONE
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 03 -->
+          <div class="space-y-4">
+            <div class="section-label">03 // WHERE'S YOUR LINE?</div>
+
+            <div class="bg-red-950/10 border border-red-900/30 p-5">
+              <label class="field-label">
+                IF WE NEED TO DO SOMETHING THAT MAKES YOU UNCOMFORTABLE, YOU WANT US TO:
+              </label>
+              <div class="space-y-3 mt-2">
+                <label class="flex items-start gap-3 cursor-pointer group">
+                  <input type="radio" name="linePolicy" value="Stop and ask first" required class="terminal-radio mt-0.5" />
+                  <span class="option-text group-hover:text-red-400 transition-colors">Stop and ask first — I want to know every move</span>
+                </label>
+                <label class="flex items-start gap-3 cursor-pointer group">
+                  <input type="radio" name="linePolicy" value="Do it, then tell me" class="terminal-radio mt-0.5" />
+                  <span class="option-text group-hover:text-red-400 transition-colors">Do it, then tell me after — I trust your judgment</span>
+                </label>
+                <label class="flex items-start gap-3 cursor-pointer group">
+                  <input type="radio" name="linePolicy" value="Do it and don't tell me" class="terminal-radio mt-0.5" />
+                  <span class="option-text group-hover:text-red-400 transition-colors">Do it and don't tell me — plausible deniability is the point</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 04 -->
+          <div class="space-y-4">
+            <div class="section-label">04 // FINAL CONFIRMATION</div>
+
+            <label class="flex items-start gap-3 cursor-pointer group">
+              <input type="checkbox" id="finalConfirm" name="confirmed" value="yes" required class="terminal-radio mt-1" />
+              <span class="option-text group-hover:text-red-400 transition-colors">
+                I confirm I've read the terms. I understand ZERO//DAY operates in the gray.
+                I accept that by submitting this, I'm <span class="text-red-500">complicit in whatever happens next</span>.
+                I won't hold them responsible for outcomes I asked for.
+              </span>
+            </label>
+          </div>
+
+          <!-- SUBMIT -->
+          <div class="pt-2">
+            <button type="submit" id="submitBtn" class="btn-danger w-full py-4 font-bold tracking-widest">
+              <span>TRANSMIT ENCRYPTED PACKET</span>
+            </button>
+            <div class="flex justify-between text-sm text-gray-600 mt-2 px-1">
+              <span>AES-256 // PGP-4096</span>
+              <span id="charCount">0 / 5000</span>
+            </div>
+          </div>
+
+        </form>
+
+        <!-- SUCCESS PANEL -->
+        <div id="successPanel" class="hidden mt-8 border border-green-900/50 bg-green-950/20 p-6 text-center">
+          <div class="text-green-500 text-4xl mb-2">✓</div>
+          <h3 class="text-green-400 tracking-widest text-lg font-bold mb-2">PACKET RECEIVED</h3>
+          <p class="text-base text-green-300/80 leading-relaxed">
+            Your transmission has been logged, encrypted, and queued.
+            <br />
+            If we're interested, you'll hear from us through a channel you didn't know existed.
+            <br />
+            <span class="text-red-400 mt-3 inline-block">If you don't hear back within 72 hours — assume we declined. Don't follow up.</span>
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Footer -->
+      <footer class="mt-8 text-center text-sm text-gray-600 tracking-widest space-y-2">
+        <div class="flex items-center justify-center gap-3">
+          <span class="w-8 h-px bg-red-900/50"></span>
+          <span class="text-red-800">ZERO // DAY</span>
+          <span class="w-8 h-px bg-red-900/50"></span>
+        </div>
+        <p>WE WERE NEVER HERE</p>
+      </footer>
+    </div>
+
+  </div>
+
+  <script>
+    // ============ NAVBAR MOBILE MENU TOGGLE ============
+    const menuBtn = document.getElementById('menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    if (menuBtn && mobileMenu) {
+      menuBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+        mobileMenu.classList.toggle('flex');
+      });
+    }
+
+    // ============ DISCLAIMER GATE ============
+    function closeDisclaimer() {
+      document.getElementById('disclaimerModal').style.display = 'none';
+      const main = document.getElementById('mainContent');
+      main.classList.remove('opacity-0');
+      main.classList.add('reveal');
+    }
+
+    // ============ CHARACTER COUNT ============
+    const situationField = document.getElementById('situation');
+    const charCount = document.getElementById('charCount');
+    if (situationField) {
+      situationField.addEventListener('input', () => {
+        charCount.textContent = `${situationField.value.length} / 5000`;
+        if (situationField.value.length > 5000) {
+          situationField.value = situationField.value.substring(0, 5000);
+        }
+      });
+    }
+
+    // ============ SUBMIT BUTTON STATE (visual only) ============
+    document.getElementById('intakeForm').addEventListener('submit', function (e) {
+      const willingBoxes = document.querySelectorAll('[data-willing]:checked');
+
+      if (willingBoxes.length === 0) {
+        e.preventDefault();
+        const willingSection = document.querySelector('[data-willing]').closest('.space-y-3');
+        willingSection.style.transition = 'transform 0.1s';
+        let shakes = 0;
+        const shakeInterval = setInterval(() => {
+          willingSection.style.transform = `translateX(${shakes % 2 === 0 ? '-4px' : '4px'})`;
+          shakes++;
+          if (shakes > 5) {
+            clearInterval(shakeInterval);
+            willingSection.style.transform = 'translateX(0)';
+          }
+        }, 60);
+        return;
+      }
+
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.innerHTML = '<span>► TRANSMITTING... ██████░░░░</span>';
+      submitBtn.disabled = true;
+      submitBtn.style.opacity = '0.7';
+    });
+
+    // ============ EASTER EGG ============
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.shiftKey && e.key === 'D') {
+        e.preventDefault();
+        console.log('%c[ ZERO//DAY ]', 'color: #dc2626; font-size: 20px; font-weight: bold;');
+        console.log('%cWe see you. 0x7F3A9B2C', 'color: #666; font-family: monospace;');
+      }
+    });
+
+    // ============ RANDOM GLITCH FLASHES ============
+    setInterval(() => {
+      const title = document.querySelector('h1.glitch');
+      if (title && Math.random() > 0.7) {
+        title.style.transform = `translate(${Math.random() * 4 - 2}px, ${Math.random() * 4 - 2}px)`;
+        title.style.filter = `hue-rotate(${Math.random() * 30}deg)`;
+        setTimeout(() => {
+          title.style.transform = '';
+          title.style.filter = '';
+        }, 80);
+      }
+    }, 3000);
+  </script>
+
+  <style>
+    select.cyber-input option {
+      background-color: #050505;
+      color: #e5e5e5;
+      padding: 8px;
+      font-size: 15px;
+    }
+    select.cyber-input:invalid {
+      color: #4a4a4a;
+    }
+  </style>
+</body>
+</html>

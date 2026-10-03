@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Access Terminal | ZERO//DAY</title>
+  <meta name="description" content="Sign in to the ZERO//DAY member terminal." />
+  <link rel="icon" type="image/svg+xml" href="../../assets/icons/favicon.svg" />
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    @keyframes glitch {
+      0%, 100% { text-shadow: 2px 0 #ef4444, -2px 0 #ffffff55; transform: translate(0); }
+      20% { text-shadow: -3px 0 #ef4444, 3px 0 #ffffff55; transform: translate(-2px, 1px); }
+      40% { text-shadow: 3px 0 #ef4444, -3px 0 #ffffff55; transform: translate(2px, -1px); }
+      60% { text-shadow: 0 0 #ef4444; transform: translate(0); }
+    }
+    .glitch { animation: glitch 2.5s infinite steps(1); }
+
+    /* ===== BLOOD-SPOT BLOBS (same as the other pages) ===== */
+    .blob {
+      background: radial-gradient(circle at 35% 25%, rgba(185, 28, 28, .40), rgba(25, 0, 0, .96) 62%);
+      border: 1px solid rgba(220, 38, 38, .55);
+      box-shadow: 0 0 40px rgba(127, 29, 29, .40), inset 0 0 35px rgba(0, 0, 0, .85);
+      transition: border-radius .8s ease, transform .3s ease, box-shadow .3s ease;
+    }
+    .blob-1 { border-radius: 58% 42% 55% 45% / 48% 56% 44% 52%; }
+    .blob-2 { border-radius: 42% 58% 46% 54% / 56% 44% 56% 44%; }
+    .blob-3 { border-radius: 52% 48% 38% 62% / 45% 55% 45% 55%; }
+    .blob:hover { transform: translateY(-6px); box-shadow: 0 0 55px rgba(220, 38, 38, .45), inset 0 0 35px rgba(0, 0, 0, .85); }
+    .blob-1:hover { border-radius: 44% 56% 42% 58% / 56% 44% 56% 44%; }
+    .blob-2:hover { border-radius: 56% 44% 58% 42% / 44% 58% 42% 56%; }
+    .blob-3:hover { border-radius: 40% 60% 55% 45% / 58% 42% 58% 42%; }
+
+    /* Softer organic shape for wide boxes (FAQ): readable, but not square */
+    .blob-soft { border-radius: 2.5rem 1rem 3rem 1rem / 1rem 2.5rem 1rem 3rem; }
+
+    /* The form card: same blood look, but it must NOT lift or morph when you hover, because you're typing in it */
+    .form-blob {
+      background: radial-gradient(circle at 20% 10%, rgba(185, 28, 28, .28), rgba(15, 0, 0, .97) 60%);
+      border: 1px solid rgba(220, 38, 38, .55);
+      box-shadow: 0 0 50px rgba(127, 29, 29, .40), inset 0 0 35px rgba(0, 0, 0, .85);
+      border-radius: 3rem 1.25rem 3.5rem 1.25rem / 1.25rem 3rem 1.25rem 3.5rem;
+    }
+
+    /* Drip hanging from the bottom edge (--dx = position, --dh = length) */
+    .drip { position: relative; }
+    .drip::after {
+      content: ""; position: absolute; top: calc(100% - 8px); left: var(--dx, 50%);
+      width: 10px; height: var(--dh, 30px);
+      background: linear-gradient(#991b1b, #dc2626);
+      border-radius: 0 0 10px 10px;
+      box-shadow: 0 0 10px rgba(220, 38, 38, .5);
+    }
+  </style>
+</head>
+
+<body class="bg-black text-gray-300 font-sans min-h-screen flex flex-col">
+
+  <!-- ===== NAVBAR (inner-page paths; Sign In is the current page) ===== -->
+  <nav class="sticky top-0 z-50 bg-black/80 backdrop-blur border-b border-red-600/30">
+    <div class="max-w-6xl mx-auto flex items-center justify-between px-4 py-4">
+
+      <a href="../../index.html" class="font-mono text-2xl font-bold tracking-widest text-white">
+        ZERO<span class="text-red-500">//</span>DAY
+      </a>
+
+      <ul class="hidden md:flex items-center gap-8 text-sm uppercase tracking-wider">
+        <li><a href="../../index.html" class="hover:text-white">Home</a></li>
+        <li><a href="about.html" class="hover:text-white">About</a></li>
+        <li><a href="services.html" class="hover:text-white">Services</a></li>
+        <li><a href="contact.html" class="hover:text-white">Contact</a></li>
+        <li><a href="signin.html" class="text-white border-b-2 border-red-600 pb-1">Sign In</a></li>
+        <li>
+          <a href="signup.html"
+             class="rounded-full border border-red-600 px-5 py-2 text-red-500 hover:bg-red-600 hover:text-white transition">
+            Sign Up
+          </a>
+        </li>
+      </ul>
+
+      <button id="menu-btn" class="md:hidden text-3xl text-white">☰</button>
+    </div>
+
+    <ul id="mobile-menu" class="hidden md:hidden flex-col gap-3 px-4 pb-4 text-sm uppercase tracking-wider">
+      <li><a href="../../index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="signin.html" class="text-white">Sign In</a></li>
+      <li><a href="signup.html">Sign Up</a></li>
+    </ul>
+  </nav>
+
+  <!-- ===== MAIN ===== -->
+  <main class="flex-grow">
+
+    <!-- SPLIT HERO (this is your hero screenshot): photo panel on the left, form on the right -->
+    <section class="grid lg:grid-cols-2">
+
+      <!-- LEFT: photo panel. On phones it sits on top and is shorter -->
+      <div class="relative min-h-[320px] lg:min-h-[640px] overflow-hidden border-b lg:border-b-0 lg:border-r border-red-600/30">
+
+        <!-- Layer 1: the photo, in its own colours (it's already red, so no grayscale or tint).
+     object-[50%_25%] keeps the mask in view instead of cropping to the middle -->
+<img src="../../assets/images/sign-in.jpg" alt="Masked figure holding an umbrella in red smoke"
+     class="absolute inset-0 h-full w-full object-cover object-[50%_25%] brightness-90 contrast-110" />
+
+<!-- Layer 2: strong fade at the bottom so the white title stays readable over the bright smoke,
+     plus a faint dark wash on the whole photo -->
+<div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-black/10"></div>
+        <!-- Layer 3: fade to black at the bottom -->
+        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+
+        <!-- Layer 4: the text, pinned to the bottom-left of the panel -->
+        <div class="relative flex h-full min-h-[320px] lg:min-h-[640px] flex-col justify-end p-8 md:p-12">
+          <p class="font-mono text-sm tracking-widest text-red-500 animate-pulse">&gt; MEMBERS_ONLY</p>
+          <h1 class="glitch mt-3 text-4xl md:text-5xl font-bold text-white leading-tight">Access<br />Terminal</h1>
+          <div class="mt-5 h-1 w-16 bg-red-600"></div>
+          <p class="mt-5 max-w-sm text-gray-300">Enter your credentials to open the collective's private channel.</p>
+
+          <div class="mt-6 flex flex-wrap gap-3">
+            <span class="rounded-full bg-red-600/25 px-4 py-2 font-mono text-xs text-red-400">ENCRYPTED</span>
+            <span class="rounded-full bg-white/10 px-4 py-2 font-mono text-xs text-gray-300">24/7 ONLINE</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: the form -->
+      <div class="flex items-center justify-center px-4 py-16 md:px-10">
+        <div class="form-blob w-full max-w-md p-8 md:p-10">
+
+          <h2 class="text-2xl font-bold text-white">Sign in</h2>
+          <p class="mt-1 text-sm text-gray-400">Welcome back, operator.</p>
+
+          <!-- Demo form: the browser checks the fields, the script below shows the demo notice -->
+          <form id="signin-form" class="mt-8 space-y-5">
+
+            <div>
+              <label for="email" class="block text-sm font-bold text-white">Email address</label>
+              <input id="email" name="email" type="email" required placeholder="you@example.com"
+                     class="mt-2 w-full rounded-lg border border-white/15 bg-black/70 px-4 py-3 text-white placeholder-gray-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600" />
+            </div>
+
+            <div>
+              <label for="password" class="block text-sm font-bold text-white">Password</label>
+              <input id="password" name="password" type="password" required minlength="6" placeholder="••••••••"
+                     class="mt-2 w-full rounded-lg border border-white/15 bg-black/70 px-4 py-3 text-white placeholder-gray-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600" />
+            </div>
+
+            <!-- Remember me + forgot password on one row -->
+            <div class="flex items-center justify-between text-sm">
+              <label class="flex items-center gap-2 text-gray-400">
+                <input type="checkbox" class="h-4 w-4 accent-red-600" />
+                Remember me
+              </label>
+              <a href="#" class="text-red-500 hover:text-red-400">Forgot password?</a>
+            </div>
+
+            <button type="submit"
+                    class="w-full rounded-full bg-red-600 px-8 py-3 font-bold text-white hover:bg-red-500 transition">
+              Access Terminal →
+            </button>
+
+            <!-- Demo notice: hidden until the form is submitted -->
+            <div id="signin-msg" class="hidden rounded-lg border border-red-600/50 bg-red-950/40 p-4 text-sm text-red-300">
+              <span class="font-mono font-bold">⚠ DEMO //</span>
+              This is a fictional site. No accounts exist and nothing was saved.
+            </div>
+          </form>
+
+          <!-- Divider with the word "or" in the middle -->
+          <div class="my-6 flex items-center gap-4 text-xs uppercase tracking-widest text-gray-600">
+            <span class="h-px flex-1 bg-white/10"></span>or<span class="h-px flex-1 bg-white/10"></span>
+          </div>
+
+          <!-- Social buttons (visual only) -->
+          <div class="grid grid-cols-2 gap-3">
+            <button type="button" class="rounded-full border border-white/20 px-4 py-2 text-sm hover:border-red-600 hover:text-white transition">Google</button>
+            <button type="button" class="rounded-full border border-white/20 px-4 py-2 text-sm hover:border-red-600 hover:text-white transition">GitHub</button>
+          </div>
+
+          <p class="mt-8 text-center text-sm text-gray-500">
+            New here?
+            <a href="signup.html" class="font-bold text-red-500 hover:text-red-400">Request membership</a>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- BENEFITS: three blood-spot cards with icons and drips -->
+    <section class="border-y border-white/10 bg-neutral-950">
+      <div class="max-w-6xl mx-auto px-4 py-20">
+
+        <p class="font-mono text-sm tracking-widest text-red-500">&gt; MEMBER_PERKS</p>
+        <h2 class="mt-2 text-3xl md:text-4xl font-bold text-white">Why sign in?</h2>
+        <div class="mt-3 h-1 w-12 bg-red-600"></div>
+
+        <div class="mt-12 grid gap-12 md:grid-cols-3">
+
+          <!-- Perk 1: shield icon -->
+          <div class="blob blob-1 drip p-10 pb-12 text-center" style="--dx:44%; --dh:32px;">
+            <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-600/15 text-red-500">
+              <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+              </svg>
+            </div>
+            <h3 class="mt-4 text-lg font-bold text-white">Track your requests</h3>
+            <p class="mt-2 text-sm text-gray-400">See the status of every clearance request in one place.</p>
+          </div>
+
+          <!-- Perk 2: eye icon -->
+          <div class="blob blob-3 drip p-10 pb-12 text-center" style="--dx:54%; --dh:40px;">
+            <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-600/15 text-red-500">
+              <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </div>
+            <h3 class="mt-4 text-lg font-bold text-white">Read your reports</h3>
+            <p class="mt-2 text-sm text-gray-400">Download audit results and fix checklists whenever you need them.</p>
+          </div>
+
+          <!-- Perk 3: light bulb icon -->
+          <div class="blob blob-2 drip p-10 pb-12 text-center" style="--dx:40%; --dh:26px;">
+            <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-600/15 text-red-500">
+              <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.517 0c.85.493 1.509 1.333 1.509 2.316V18" />
+              </svg>
+            </div>
+            <h3 class="mt-4 text-lg font-bold text-white">Join the training</h3>
+            <p class="mt-2 text-sm text-gray-400">Members get early access to workshops and security guides.</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ: two click-to-open drawers -->
+    <section class="max-w-3xl mx-auto px-4 py-20">
+
+      <p class="font-mono text-sm tracking-widest text-red-500">&gt; STUCK_AT_THE_DOOR</p>
+      <h2 class="mt-2 text-3xl md:text-4xl font-bold text-white">Sign-in help</h2>
+      <div class="mt-3 h-1 w-12 bg-red-600"></div>
+
+      <div class="mt-10 space-y-5">
+
+        <details class="group blob blob-soft p-6">
+          <summary class="flex cursor-pointer list-none items-center justify-between font-bold text-white">
+            I forgot my password. What now?
+            <span class="text-2xl text-red-500 transition group-open:rotate-45">+</span>
+          </summary>
+          <p class="mt-3 text-sm text-gray-400">Click "Forgot password?" under the form and we would send you a reset link, if accounts were real on this fictional site.</p>
+        </details>
+
+        <details class="group blob blob-soft p-6">
+          <summary class="flex cursor-pointer list-none items-center justify-between font-bold text-white">
+            Do I need an account to hire you?
+            <span class="text-2xl text-red-500 transition group-open:rotate-45">+</span>
+          </summary>
+          <p class="mt-3 text-sm text-gray-400">No. Anyone can send a request from the <a href="contact.html" class="text-red-500 hover:text-red-400">Contact page</a>. Accounts only add tracking and reports.</p>
+        </details>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== FOOTER (inner-page paths) ===== -->
+  <footer class="border-t border-red-600/30 bg-black">
+    <div class="max-w-6xl mx-auto grid gap-8 px-4 py-10 md:grid-cols-3">
+
+      <div>
+        <p class="font-mono text-xl font-bold tracking-widest text-white">
+          ZERO<span class="text-red-500">//</span>DAY
+        </p>
+        <p class="mt-2 text-sm text-gray-500">Find the flaw before they do.</p>
+      </div>
+
+      <div>
+        <p class="font-bold text-white">Navigate</p>
+        <ul class="mt-2 space-y-1 text-sm">
+          <li><a href="../../index.html" class="hover:text-white">Home</a></li>
+          <li><a href="about.html" class="hover:text-white">About</a></li>
+          <li><a href="services.html" class="hover:text-white">Services</a></li>
+          <li><a href="contact.html" class="hover:text-white">Contact</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <p class="font-bold text-white">Follow</p>
+        <ul class="mt-2 space-y-1 text-sm">
+          <li><a href="#" target="_blank" rel="noopener" class="hover:text-white">Instagram</a></li>
+          <li><a href="#" target="_blank" rel="noopener" class="hover:text-white">Twitter / X</a></li>
+          <li><a href="#" target="_blank" rel="noopener" class="hover:text-white">Facebook</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="border-t border-white/10 py-4 text-center text-xs text-gray-600">
+      © 2026 ZERO//DAY. A fictional project for a web design assignment.
+    </p>
+  </footer>
+
+  <script>
+    // Phone menu switch
+    document.getElementById("menu-btn").addEventListener("click", function () {
+      document.getElementById("mobile-menu").classList.toggle("hidden");
+    });
+
+    // Demo sign-in: runs only after the browser's own checks pass.
+    // preventDefault() stops the page reloading, then we reveal the demo notice.
+    document.getElementById("signin-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      document.getElementById("signin-msg").classList.remove("hidden");
+    });
+  </script>
+</body>
+</html>

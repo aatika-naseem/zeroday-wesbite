@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Who We Are | ZERO//DAY</title>
+  <meta name="description" content="Meet ZERO//DAY, the fictional collective of ethical hackers behind the code." />
+  <link rel="icon" type="image/svg+xml" href="../../assets/icons/favicon.svg" />
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    /* Glitch effect for the page title */
+    @keyframes glitch {
+      0%, 100% { text-shadow: 2px 0 #ef4444, -2px 0 #ffffff55; transform: translate(0); }
+      20% { text-shadow: -3px 0 #ef4444, 3px 0 #ffffff55; transform: translate(-2px, 1px); }
+      40% { text-shadow: 3px 0 #ef4444, -3px 0 #ffffff55; transform: translate(2px, -1px); }
+      60% { text-shadow: 0 0 #ef4444; transform: translate(0); }
+    }
+    .glitch { animation: glitch 2.5s infinite steps(1); }
+
+    /* ===== BLOOD-SPOT BLOBS (same as the Home page) ===== */
+    .blob {
+      background: radial-gradient(circle at 35% 25%, rgba(185, 28, 28, .40), rgba(25, 0, 0, .96) 62%);
+      border: 1px solid rgba(220, 38, 38, .55);
+      box-shadow: 0 0 40px rgba(127, 29, 29, .40), inset 0 0 35px rgba(0, 0, 0, .85);
+      transition: border-radius .8s ease, transform .3s ease, box-shadow .3s ease;
+    }
+    .blob-1 { border-radius: 58% 42% 55% 45% / 48% 56% 44% 52%; }
+    .blob-2 { border-radius: 42% 58% 46% 54% / 56% 44% 56% 44%; }
+    .blob-3 { border-radius: 52% 48% 38% 62% / 45% 55% 45% 55%; }
+    .blob-4 { border-radius: 47% 53% 60% 40% / 58% 42% 58% 42%; }
+    .blob:hover { transform: translateY(-6px); box-shadow: 0 0 55px rgba(220, 38, 38, .45), inset 0 0 35px rgba(0, 0, 0, .85); }
+    .blob-1:hover { border-radius: 44% 56% 42% 58% / 56% 44% 56% 44%; }
+    .blob-2:hover { border-radius: 56% 44% 58% 42% / 44% 58% 42% 56%; }
+    .blob-3:hover { border-radius: 40% 60% 55% 45% / 58% 42% 58% 42%; }
+    .blob-4:hover { border-radius: 58% 42% 40% 60% / 44% 56% 44% 56%; }
+
+    /* Drip hanging from the bottom edge (--dx = position, --dh = length) */
+    .drip { position: relative; }
+    .drip::after {
+      content: ""; position: absolute; top: calc(100% - 8px); left: var(--dx, 50%);
+      width: 10px; height: var(--dh, 30px);
+      background: linear-gradient(#991b1b, #dc2626);
+      border-radius: 0 0 10px 10px;
+      box-shadow: 0 0 10px rgba(220, 38, 38, .5);
+    }
+  </style>
+</head>
+
+<body class="bg-black text-gray-300 font-sans min-h-screen flex flex-col">
+
+  <!-- ===== NAVBAR (inner-page paths; About is the current page) ===== -->
+  <nav class="sticky top-0 z-50 bg-black/80 backdrop-blur border-b border-red-600/30">
+    <div class="max-w-6xl mx-auto flex items-center justify-between px-4 py-4">
+
+      <a href="../../index.html" class="font-mono text-2xl font-bold tracking-widest text-white">
+        ZERO<span class="text-red-500">//</span>DAY
+      </a>
+
+      <ul class="hidden md:flex items-center gap-8 text-sm uppercase tracking-wider">
+        <li><a href="../../index.html" class="hover:text-white">Home</a></li>
+        <li><a href="about.html" class="text-white border-b-2 border-red-600 pb-1">About</a></li>
+        <li><a href="services.html" class="hover:text-white">Services</a></li>
+        <li><a href="contact.html" class="hover:text-white">Contact</a></li>
+        <li><a href="signin.html" class="hover:text-white">Sign In</a></li>
+        <li>
+          <a href="signup.html"
+             class="rounded-full border border-red-600 px-5 py-2 text-red-500 hover:bg-red-600 hover:text-white transition">
+            Sign Up
+          </a>
+        </li>
+      </ul>
+
+      <button id="menu-btn" class="md:hidden text-3xl text-white">☰</button>
+    </div>
+
+    <ul id="mobile-menu" class="hidden md:hidden flex-col gap-3 px-4 pb-4 text-sm uppercase tracking-wider">
+      <li><a href="../../index.html">Home</a></li>
+      <li><a href="about.html" class="text-white">About</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="signin.html">Sign In</a></li>
+      <li><a href="signup.html">Sign Up</a></li>
+    </ul>
+  </nav>
+
+  <!-- ===== MAIN ===== -->
+  <main class="flex-grow">
+
+    <!-- PAGE HEADER -->
+    <section class="border-b border-white/10 bg-gradient-to-b from-red-950/50 to-black">
+      <div class="max-w-6xl mx-auto px-4 py-20">
+        <p class="font-mono text-sm tracking-widest text-red-500 animate-pulse">&gt; IDENTITY_UNKNOWN</p>
+        <h1 class="glitch mt-3 text-4xl md:text-6xl font-bold text-white">Who We Are</h1>
+        <div class="mt-5 h-1 w-16 bg-red-600"></div>
+        <p class="mt-6 max-w-xl text-gray-400">
+          No faces. No real names. Just a small collective of ethical hackers who think like attackers so you don't have to.
+        </p>
+      </div>
+    </section>
+
+    <!-- STORY: text on the left, photo on the right -->
+    <section class="max-w-6xl mx-auto px-4 py-20 grid gap-12 md:grid-cols-2 items-center">
+
+      <div>
+        <p class="font-mono text-sm tracking-widest text-red-500">&gt; OUR_STORY</p>
+        <h2 class="mt-2 text-3xl md:text-4xl font-bold text-white">Born in the dark</h2>
+        <div class="mt-3 h-1 w-12 bg-red-600"></div>
+        <p class="mt-6 text-gray-400">
+          ZERO//DAY began as a late-night chat between a few friends who kept finding the same mistakes in the same systems.
+          Instead of looking away, they decided to fix them, one permission slip at a time.
+        </p>
+        <p class="mt-4 text-gray-400">
+          Today the collective works behind codenames, so the work speaks louder than the names.
+        </p>
+
+        <div class="mt-8 flex flex-wrap gap-3">
+          <span class="rounded-full bg-red-600/25 px-4 py-2 font-mono text-sm text-red-400">EST. 2019</span>
+          <span class="rounded-full bg-white/10 px-4 py-2 font-mono text-sm text-gray-300">12 MEMBERS</span>
+          <span class="rounded-full bg-white/10 px-4 py-2 font-mono text-sm text-gray-300">500+ AUDITS</span>
+        </div>
+      </div>
+
+      <div class="blob blob-2 overflow-hidden mx-auto w-full max-w-sm aspect-[2/3]">
+        <img src="../../assets/images/mask-man.jpg" alt="Hooded figure wearing a mask against a red wall"
+             class="h-full w-full object-cover object-center" />
+      </div>
+    </section>
+
+    <!-- OUR CODE -->
+    <section class="border-y border-white/10 bg-neutral-950">
+      <div class="max-w-6xl mx-auto px-4 py-20">
+
+        <p class="font-mono text-sm tracking-widest text-red-500">&gt; WHAT_WE_BELIEVE</p>
+        <h2 class="mt-2 text-3xl md:text-4xl font-bold text-white">Our Code</h2>
+        <div class="mt-3 h-1 w-12 bg-red-600"></div>
+
+        <div class="mt-12 grid gap-12 md:grid-cols-3">
+
+          <div class="blob blob-1 drip p-10 pb-12 text-center" style="--dx:44%; --dh:32px;">
+            <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-600/15 text-red-500">
+              <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+              </svg>
+            </div>
+            <h3 class="mt-4 text-lg font-bold text-white">Protect</h3>
+            <p class="mt-2 text-sm text-gray-400">Every test is done with written permission. We attack only to defend.</p>
+          </div>
+
+          <div class="blob blob-3 drip p-10 pb-12 text-center" style="--dx:54%; --dh:40px;">
+            <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-600/15 text-red-500">
+              <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </div>
+            <h3 class="mt-4 text-lg font-bold text-white">Expose</h3>
+            <p class="mt-2 text-sm text-gray-400">We show you the truth about your weak spots, even when it's uncomfortable.</p>
+          </div>
+
+          <div class="blob blob-4 drip p-10 pb-12 text-center" style="--dx:40%; --dh:26px;">
+            <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-600/15 text-red-500">
+              <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.517 0c.85.493 1.509 1.333 1.509 2.316V18" />
+              </svg>
+            </div>
+            <h3 class="mt-4 text-lg font-bold text-white">Teach</h3>
+            <p class="mt-2 text-sm text-gray-400">Knowledge shared is a wall built. We train people, not just patch machines.</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- TIMELINE: a winding trail of footprints with four stations -->
+    <section class="max-w-5xl mx-auto px-4 py-20">
+
+      <svg width="0" height="0" class="absolute" aria-hidden="true">
+        <defs>
+          <symbol id="foot" viewBox="0 0 24 40">
+            <g fill="currentColor">
+              <ellipse cx="12" cy="31" rx="6.5" ry="8" />
+              <ellipse cx="11.5" cy="18" rx="7" ry="8.5" />
+              <circle cx="5.5" cy="6.5" r="2.6" />
+              <circle cx="11" cy="3.8" r="2.1" />
+              <circle cx="15.8" cy="4.2" r="1.9" />
+              <circle cx="19.8" cy="6.5" r="1.7" />
+            </g>
+          </symbol>
+        </defs>
+      </svg>
+
+      <p class="font-mono text-sm tracking-widest text-red-500">&gt; THE_JOURNEY</p>
+      <h2 class="mt-2 text-3xl md:text-4xl font-bold text-white">How we got here</h2>
+      <div class="mt-3 h-1 w-12 bg-red-600"></div>
+      <p class="mt-4 max-w-xl text-sm text-gray-500">Follow the footprints. Every station is a step the collective took.</p>
+
+      <div class="mt-14">
+
+        <div class="grid grid-cols-[4rem_1fr] md:grid-cols-[1fr_5rem_1fr] gap-x-4 md:gap-x-6 items-center">
+          <div class="col-start-1 row-start-1 md:col-start-2 flex justify-center">
+            <div class="flex h-16 w-16 items-center justify-center rounded-full border-2 border-red-600 bg-black font-mono text-sm font-bold text-red-500 shadow-[0_0_25px_rgba(220,38,38,0.6)]">2019</div>
+          </div>
+          <div class="blob blob-1 col-start-2 row-start-1 md:col-start-1 p-8 md:text-right">
+            <p class="font-mono text-xs tracking-widest text-red-500">STATION 01</p>
+            <h3 class="mt-1 text-lg font-bold text-white">The first late-night chat</h3>
+            <p class="mt-2 text-sm text-gray-400">Three friends, one shared problem, and a lot of coffee.</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-[4rem_1fr] md:grid-cols-[1fr_5rem_1fr] gap-x-4 md:gap-x-6">
+          <div class="col-start-1 md:col-start-2 flex flex-col items-center gap-1 py-3 text-red-600">
+            <svg class="h-9 w-5 opacity-30 -translate-x-3 rotate-[8deg] -scale-x-100"><use href="#foot" /></svg>
+            <svg class="h-9 w-5 opacity-50 translate-x-3 -rotate-[8deg]"><use href="#foot" /></svg>
+            <svg class="h-9 w-5 opacity-70 -translate-x-3 rotate-[8deg] -scale-x-100"><use href="#foot" /></svg>
+            <svg class="h-9 w-5 opacity-90 translate-x-3 -rotate-[8deg]"><use href="#foot" /></svg>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-[4rem_1fr] md:grid-cols-[1fr_5rem_1fr] gap-x-4 md:gap-x-6 items-center">
+          <div class="col-start-1 row-start-1 md:col-start-2 flex justify-center">
+            <div class="flex h-16 w-16 items-center justify-center rounded-full border-2 border-red-600 bg-black font-mono text-sm font-bold text-red-500 shadow-[0_0_25px_rgba(220,38,38,0.6)]">2021</div>
+          </div>
+          <div class="blob blob-2 col-start-2 row-start-1 md:col-start-3 p-8">
+            <p class="font-mono text-xs tracking-widest text-red-500">STATION 02</p>
+            <h3 class="mt-1 text-lg font-bold text-white">First 100 audits</h3>
+            <p class="mt-2 text-sm text-gray-400">Small shops, schools and start-ups started trusting the collective.</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-[4rem_1fr] md:grid-cols-[1fr_5rem_1fr] gap-x-4 md:gap-x-6">
+          <div class="col-start-1 md:col-start-2 flex flex-col items-center gap-1 py-3 text-red-600">
+            <svg class="h-9 w-5 opacity-30 -translate-x-3 rotate-[8deg] -scale-x-100"><use href="#foot" /></svg>
+            <svg class="h-9 w-5 opacity-50 translate-x-3 -rotate-[8deg]"><use href="#foot" /></svg>
+            <svg class="h-9 w-5 opacity-70 -translate-x-3 rotate-[8deg] -scale-x-100"><use href="#foot" /></svg>
+            <svg class="h-9 w-5 opacity-90 translate-x-3 -rotate-[8deg]"><use href="#foot" /></svg>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-[4rem_1fr] md:grid-cols-[1fr_5rem_1fr] gap-x-4 md:gap-x-6 items-center">
+          <div class="col-start-1 row-start-1 md:col-start-2 flex justify-center">
+            <div class="flex h-16 w-16 items-center justify-center rounded-full border-2 border-red-600 bg-black font-mono text-sm font-bold text-red-500 shadow-[0_0_25px_rgba(220,38,38,0.6)]">2024</div>
+          </div>
+          <div class="blob blob-3 col-start-2 row-start-1 md:col-start-1 p-8 md:text-right">
+            <p class="font-mono text-xs tracking-widest text-red-500">STATION 03</p>
+            <h3 class="mt-1 text-lg font-bold text-white">Training program launched</h3>
+            <p class="mt-2 text-sm text-gray-400">We began teaching teams how to defend themselves.</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-[4rem_1fr] md:grid-cols-[1fr_5rem_1fr] gap-x-4 md:gap-x-6">
+          <div class="col-start-1 md:col-start-2 flex flex-col items-center gap-1 py-3 text-red-600">
+            <svg class="h-9 w-5 opacity-30 -translate-x-3 rotate-[8deg] -scale-x-100"><use href="#foot" /></svg>
+            <svg class="h-9 w-5 opacity-50 translate-x-3 -rotate-[8deg]"><use href="#foot" /></svg>
+            <svg class="h-9 w-5 opacity-70 -translate-x-3 rotate-[8deg] -scale-x-100"><use href="#foot" /></svg>
+            <svg class="h-9 w-5 opacity-90 translate-x-3 -rotate-[8deg]"><use href="#foot" /></svg>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-[4rem_1fr] md:grid-cols-[1fr_5rem_1fr] gap-x-4 md:gap-x-6 items-center">
+          <div class="col-start-1 row-start-1 md:col-start-2 flex justify-center">
+            <div class="flex h-16 w-16 items-center justify-center rounded-full border-2 border-red-500 bg-red-600 font-mono text-sm font-bold text-white shadow-[0_0_35px_rgba(220,38,38,0.9)] animate-pulse">NOW</div>
+          </div>
+          <div class="blob blob-4 col-start-2 row-start-1 md:col-start-3 p-8">
+            <p class="font-mono text-xs tracking-widest text-red-500">STATION 04</p>
+            <h3 class="mt-1 text-lg font-bold text-white">Twelve members, still no faces</h3>
+            <p class="mt-2 text-sm text-gray-400">And the list of systems we have helped keeps growing.</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-[4rem_1fr] md:grid-cols-[1fr_5rem_1fr] gap-x-4 md:gap-x-6">
+          <div class="col-start-1 md:col-start-2 flex flex-col items-center gap-1 py-3 text-red-600">
+            <svg class="h-9 w-5 opacity-60 -translate-x-3 rotate-[8deg] -scale-x-100"><use href="#foot" /></svg>
+            <svg class="h-9 w-5 opacity-35 translate-x-3 -rotate-[8deg]"><use href="#foot" /></svg>
+            <svg class="h-9 w-5 opacity-15 -translate-x-3 rotate-[8deg] -scale-x-100"><use href="#foot" /></svg>
+          </div>
+          <p class="col-start-2 md:col-start-3 self-center font-mono text-sm text-gray-600">// the trail continues...</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TEAM: four blood-spot cards -->
+    <section class="border-t border-white/10 bg-neutral-950">
+      <div class="max-w-6xl mx-auto px-4 py-20">
+
+        <p class="font-mono text-sm tracking-widest text-red-500">&gt; THE_COLLECTIVE</p>
+        <h2 class="mt-2 text-3xl md:text-4xl font-bold text-white">Meet the Shadows</h2>
+        <div class="mt-3 h-1 w-12 bg-red-600"></div>
+
+        <!-- ===== NEW: Behind-the-scenes collective image ===== -->
+        <div class="mt-12 relative overflow-hidden rounded-lg border border-red-900/30">
+          <img src="../../assets/images/about.jpg"
+               alt="The ZERO//DAY collective at work"
+               class="w-full h-64 md:h-96 object-cover object-center grayscale-[0.3] contrast-110 brightness-75" />
+
+          <!-- Dark gradient overlay -->
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none"></div>
+
+          <!-- Terminal-style caption -->
+          <p class="absolute bottom-3 left-4 text-xs font-mono text-red-500/80 tracking-widest">
+            &gt; RECORDED_2023.11.04 // NODE: 07-ALPHA
+          </p>
+        </div>
+
+        <div class="mt-12 grid gap-12 sm:grid-cols-2 lg:grid-cols-4">
+
+          <div class="blob blob-2 drip p-8 pb-10 text-center" style="--dx:46%; --dh:30px;">
+            <div class="mx-auto flex h-20 w-20 items-center justify-center rounded-full border border-red-600 bg-black/60 font-mono text-2xl font-bold text-red-500">GH</div>
+            <h3 class="mt-4 font-bold text-white">GHOST_04</h3>
+            <p class="text-sm text-gray-400">Lead Auditor</p>
+            <span class="mt-3 inline-block rounded-full bg-red-600/25 px-3 py-1 text-xs font-mono text-red-400">FOUNDER</span>
+          </div>
+
+          <div class="blob blob-4 drip p-8 pb-10 text-center" style="--dx:54%; --dh:22px;">
+            <div class="mx-auto flex h-20 w-20 items-center justify-center rounded-full border border-red-600 bg-black/60 font-mono text-2xl font-bold text-red-500">NP</div>
+            <h3 class="mt-4 font-bold text-white">NULL_PTR</h3>
+            <p class="text-sm text-gray-400">Network Specialist</p>
+            <span class="mt-3 inline-block rounded-full bg-white/10 px-3 py-1 text-xs font-mono text-gray-300">ELITE</span>
+          </div>
+
+          <div class="blob blob-1 drip p-8 pb-10 text-center" style="--dx:42%; --dh:36px;">
+            <div class="mx-auto flex h-20 w-20 items-center justify-center rounded-full border border-red-600 bg-black/60 font-mono text-2xl font-bold text-red-500">R4</div>
+            <h3 class="mt-4 font-bold text-white">R4VEN</h3>
+            <p class="text-sm text-gray-400">Incident Response</p>
+            <span class="mt-3 inline-block rounded-full bg-white/10 px-3 py-1 text-xs font-mono text-gray-300">ELITE</span>
+          </div>
+
+          <div class="blob blob-3 drip p-8 pb-10 text-center" style="--dx:50%; --dh:26px;">
+            <div class="mx-auto flex h-20 w-20 items-center justify-center rounded-full border border-red-600 bg-black/60 font-mono text-2xl font-bold text-red-500">VX</div>
+            <h3 class="mt-4 font-bold text-white">VOID_X</h3>
+            <p class="text-sm text-gray-400">Trainer</p>
+            <span class="mt-3 inline-block rounded-full bg-white/10 px-3 py-1 text-xs font-mono text-gray-300">MENTOR</span>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- MANIFESTO QUOTE -->
+    <section class="max-w-4xl mx-auto px-4 py-20 text-center">
+      <p class="font-serif text-6xl leading-none text-red-600">&ldquo;</p>
+      <p class="mt-2 text-2xl md:text-3xl font-bold text-white">
+        We don't break in to steal. We break in so no one else can.
+      </p>
+      <p class="mt-4 font-mono text-sm text-gray-500">// THE ZERO//DAY MANIFESTO</p>
+    </section>
+
+    <!-- BANNER -->
+    <section class="max-w-6xl mx-auto px-4 pb-24">
+      <div class="blob drip p-10 pb-14 md:p-14 md:pb-20 text-center"
+           style="border-radius: 55% 45% 50% 50% / 38% 42% 58% 62%; --dx:50%; --dh:44px;">
+        <h2 class="text-3xl md:text-4xl font-bold text-white">Want the collective on your side?</h2>
+        <p class="mx-auto mt-4 max-w-xl text-gray-400">Tell us what you need protected and we will take it from there.</p>
+        <div class="mt-8 flex flex-wrap justify-center gap-4">
+          <a href="contact.html" class="rounded-full bg-red-600 px-8 py-3 font-bold text-white hover:bg-red-500 transition">Request Clearance →</a>
+          <a href="services.html" class="rounded-full border border-gray-600 px-8 py-3 text-gray-300 hover:border-white hover:text-white transition">See Services</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="border-t border-red-600/30 bg-black">
+    <div class="max-w-6xl mx-auto grid gap-8 px-4 py-10 md:grid-cols-3">
+
+      <div>
+        <p class="font-mono text-xl font-bold tracking-widest text-white">
+          ZERO<span class="text-red-500">//</span>DAY
+        </p>
+        <p class="mt-2 text-sm text-gray-500">Find the flaw before they do.</p>
+      </div>
+
+      <div>
+        <p class="font-bold text-white">Navigate</p>
+        <ul class="mt-2 space-y-1 text-sm">
+          <li><a href="../../index.html" class="hover:text-white">Home</a></li>
+          <li><a href="about.html" class="hover:text-white">About</a></li>
+          <li><a href="services.html" class="hover:text-white">Services</a></li>
+          <li><a href="contact.html" class="hover:text-white">Contact</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <p class="font-bold text-white">Follow</p>
+        <ul class="mt-2 space-y-1 text-sm">
+          <li><a href="#" target="_blank" rel="noopener" class="hover:text-white">Instagram</a></li>
+          <li><a href="#" target="_blank" rel="noopener" class="hover:text-white">Twitter / X</a></li>
+          <li><a href="#" target="_blank" rel="noopener" class="hover:text-white">Facebook</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="border-t border-white/10 py-4 text-center text-xs text-gray-600">
+      © 2026 ZERO//DAY. A fictional project for a web design assignment.
+    </p>
+  </footer>
+
+  <script>
+    document.getElementById("menu-btn").addEventListener("click", function () {
+      document.getElementById("mobile-menu").classList.toggle("hidden");
+    });
+  </script>
+</body>
+</html>

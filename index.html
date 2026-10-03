@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZERO//DAY | Find the Flaw Before They Do</title>
+  <meta name="description" content="ZERO//DAY is a fictional elite hacker collective offering security audits and training." />
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg" />
+  <!-- Google Fonts: Caveat (handwritten) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          'hand': ['"Caveat"', 'cursive'],
+        }
+      }
+    }
+  }
+</script>
+
+  <!-- Custom effects Tailwind doesn't have built in (this must stay inside <head>) -->
+  <style>
+    /* Scanlines: thin dark lines across the hero, like a CRT monitor */
+    .scanlines::after {
+      content: ""; position: absolute; inset: 0; pointer-events: none;
+      background: repeating-linear-gradient(to bottom, rgba(0,0,0,0) 0, rgba(0,0,0,0) 2px, rgba(0,0,0,.35) 3px);
+    }
+
+    /* Glitch: the text jumps sideways with red and white ghost copies */
+    @keyframes glitch {
+      0%, 100% { text-shadow: 2px 0 #ef4444, -2px 0 #ffffff55; transform: translate(0); }
+      20% { text-shadow: -3px 0 #ef4444, 3px 0 #ffffff55; transform: translate(-2px, 1px); }
+      40% { text-shadow: 3px 0 #ef4444, -3px 0 #ffffff55; transform: translate(2px, -1px); }
+      60% { text-shadow: 0 0 #ef4444; transform: translate(0); }
+    }
+    .glitch { animation: glitch 2.5s infinite steps(1); }
+
+    /* ===== BLOOD-SPOT BLOBS =====
+       .blob = the look: a dark pool with a red glow in the middle and a glowing edge */
+    .blob {
+      background: radial-gradient(circle at 35% 25%, rgba(185, 28, 28, .40), rgba(25, 0, 0, .96) 62%);
+      border: 1px solid rgba(220, 38, 38, .55);
+      box-shadow: 0 0 40px rgba(127, 29, 29, .40), inset 0 0 35px rgba(0, 0, 0, .85);
+      transition: border-radius .8s ease, transform .3s ease, box-shadow .3s ease;
+    }
+    /* Four different shapes. Each number is one corner's curve (horizontal / vertical) */
+    .blob-1 { border-radius: 58% 42% 55% 45% / 48% 56% 44% 52%; }
+    .blob-2 { border-radius: 42% 58% 46% 54% / 56% 44% 56% 44%; }
+    .blob-3 { border-radius: 52% 48% 38% 62% / 45% 55% 45% 55%; }
+    .blob-4 { border-radius: 47% 53% 60% 40% / 58% 42% 58% 42%; }
+    /* On hover each blob morphs into a new shape, lifts up and glows brighter */
+    .blob:hover { transform: translateY(-6px); box-shadow: 0 0 55px rgba(220, 38, 38, .45), inset 0 0 35px rgba(0, 0, 0, .85); }
+    .blob-1:hover { border-radius: 44% 56% 42% 58% / 56% 44% 56% 44%; }
+    .blob-2:hover { border-radius: 56% 44% 58% 42% / 44% 58% 42% 56%; }
+    .blob-3:hover { border-radius: 40% 60% 55% 45% / 58% 42% 58% 42%; }
+    .blob-4:hover { border-radius: 58% 42% 40% 60% / 44% 56% 44% 56%; }
+
+    /* A softer organic shape for wide boxes (FAQ drawers, banner): readable, but not square */
+    .blob-soft { border-radius: 2.5rem 1rem 3rem 1rem / 1rem 2.5rem 1rem 3rem; }
+
+    /* .drip adds a blood drip hanging from the bottom edge.
+       --dx = how far from the left, --dh = how long the drip is */
+    .drip { position: relative; }
+    .drip::after {
+      content: ""; position: absolute; top: calc(100% - 8px); left: var(--dx, 50%);
+      width: 10px; height: var(--dh, 30px);
+      background: linear-gradient(#991b1b, #dc2626);
+      border-radius: 0 0 10px 10px;
+      box-shadow: 0 0 10px rgba(220, 38, 38, .5);
+    }
+  </style>
+</head>
+
+<body class="bg-black text-gray-300 font-sans min-h-screen flex flex-col">
+
+  <!-- ===== NAVBAR (identical on every page) ===== -->
+  <nav class="sticky top-0 z-50 bg-black/80 backdrop-blur border-b border-red-600/30">
+    <div class="max-w-6xl mx-auto flex items-center justify-between px-4 py-4">
+
+      <a href="index.html" class="font-mono text-2xl font-bold tracking-widest text-white">
+        ZERO<span class="text-red-500">//</span>DAY
+      </a>
+
+      <!-- Desktop links: hidden on phones, a row from tablet size up -->
+      <ul class="hidden md:flex items-center gap-8 text-sm uppercase tracking-wider">
+        <!-- Current page = white text + red underline -->
+        <li><a href="index.html" class="text-white border-b-2 border-red-600 pb-1">Home</a></li>
+        <li><a href="src/pages/about.html" class="hover:text-white">About</a></li>
+        <li><a href="src/pages/services.html" class="hover:text-white">Services</a></li>
+        <li><a href="src/pages/contact.html" class="hover:text-white">Contact</a></li>
+        <li><a href="src/pages/signin.html" class="hover:text-white">Sign In</a></li>
+        <li>
+          <a href="src/pages/signup.html"
+             class="rounded-full border border-red-600 px-5 py-2 text-red-500 hover:bg-red-600 hover:text-white transition">
+            Sign Up
+          </a>
+        </li>
+      </ul>
+
+      <!-- Menu button: phones only -->
+      <button id="menu-btn" class="md:hidden text-3xl text-white">☰</button>
+    </div>
+
+    <!-- Phone menu: starts hidden -->
+    <ul id="mobile-menu" class="hidden md:hidden flex-col gap-3 px-4 pb-4 text-sm uppercase tracking-wider">
+      <li><a href="index.html" class="text-white">Home</a></li>
+      <li><a href="src/pages/about.html">About</a></li>
+      <li><a href="src/pages/services.html">Services</a></li>
+      <li><a href="src/pages/contact.html">Contact</a></li>
+      <li><a href="src/pages/signin.html">Sign In</a></li>
+      <li><a href="src/pages/signup.html">Sign Up</a></li>
+    </ul>
+  </nav>
+
+  <!-- ===== MAIN ===== -->
+  <main class="flex-grow">
+
+    <!-- HERO -->
+    <section class="scanlines relative min-h-[90vh] flex items-center overflow-hidden">
+
+      <!-- Layer 1: black and white photo -->
+      <img src="assets/images/hero.jpg" alt="Masked figure with a scythe standing on a tree stump in the mist"
+           class="absolute inset-0 w-full h-full object-cover object-top grayscale contrast-125 brightness-75" />
+
+      <!-- Layer 2: red tint -->
+      <div class="absolute inset-0 bg-red-900/30 mix-blend-multiply"></div>
+
+      <!-- Layer 3: black fade from the left, behind the text -->
+      <div class="absolute inset-0 bg-gradient-to-r from-black via-black/50 to-transparent"></div>
+
+      <!-- Layer 4: dark vignette, corners go pitch black -->
+      <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,black_100%)]"></div>
+
+      <!-- Layer 5: the text (w-full lines it up under the logo) -->
+      <div class="relative w-full max-w-6xl mx-auto px-4 py-20">
+
+        <p class="font-mono text-red-500 text-xs md:text-sm tracking-widest animate-pulse">
+          ⚠ RESTRICTED ACCESS // UNAUTHORIZED USERS WILL BE TRACED
+        </p>
+
+        <h1 class="glitch mt-4 text-4xl md:text-6xl font-bold text-white leading-tight max-w-3xl">
+          You were never<br />supposed to find this.
+        </h1>
+
+        <div class="mt-5 h-1 w-16 bg-red-600"></div>
+
+        <p class="mt-6 max-w-xl text-gray-400">
+          We know every door. We know which ones were left unlocked.
+          <span class="font-mono text-red-500">&gt; ZERO//DAY<span class="animate-pulse">_</span></span>
+        </p>
+
+        <div class="mt-8 flex flex-wrap gap-4">
+          <a href="src/pages/contact.html"
+             class="rounded-full border border-red-600 px-7 py-3 text-red-500 hover:bg-red-600 hover:text-black transition">
+            Request Clearance →
+          </a>
+          <a href="src/pages/services.html"
+             class="rounded-full border border-gray-600 px-7 py-3 text-gray-400 hover:border-white hover:text-white transition">
+            Enter the Dark
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== STATS: four small blood blobs ===== -->
+    <section class="border-y border-white/10 bg-neutral-950">
+      <div class="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 px-4 py-12 text-center">
+
+        <div class="blob blob-1 px-4 py-8">
+          <p class="font-mono text-4xl font-bold text-red-500">500+</p>
+          <p class="mt-1 text-xs uppercase tracking-wider text-gray-400">Systems Tested</p>
+        </div>
+        <div class="blob blob-2 px-4 py-8">
+          <p class="font-mono text-4xl font-bold text-red-500">24/7</p>
+          <p class="mt-1 text-xs uppercase tracking-wider text-gray-400">Watching</p>
+        </div>
+        <div class="blob blob-3 px-4 py-8">
+          <p class="font-mono text-4xl font-bold text-red-500">0</p>
+          <p class="mt-1 text-xs uppercase tracking-wider text-gray-400">Traces Left</p>
+        </div>
+        <div class="blob blob-4 px-4 py-8">
+          <p class="font-mono text-4xl font-bold text-red-500">12</p>
+          <p class="mt-1 text-xs uppercase tracking-wider text-gray-400">Elite Members</p>
+        </div>
+
+      </div>
+      <!-- Handwritten margin note -->
+<p class="mt-6 text-center text-2xl text-gray-400 font-hand rotate-[-2deg]">
+  ~ numbers we don't verify ~
+</p>
+    </section>
+
+    <!-- ===== SERVICES: four blood-spot cards with SVG icons and drips ===== -->
+    <section class="max-w-6xl mx-auto px-4 py-20">
+
+      <p class="font-mono text-sm tracking-widest text-red-500">&gt; WHAT_WE_DO</p>
+      <h2 class="mt-2 text-3xl md:text-4xl font-bold text-white">Our Services</h2>
+      <div class="mt-3 h-1 w-12 bg-red-600"></div>
+
+      <!-- gap-12 leaves room for the drips hanging below each card -->
+      <div class="mt-12 grid gap-12 sm:grid-cols-2 lg:grid-cols-4">
+
+        <!-- Card 1: Security Audits (lock icon) -->
+        <div class="blob blob-1 drip p-8 pb-10 text-center" style="--dx:42%; --dh:34px;">
+          <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-600/15 text-red-500">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5V6.75a4.5 4.5 0 119 0v3.75M3.75 21.75h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H3.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+            </svg>
+          </div>
+          <h3 class="mt-4 text-lg font-bold text-white">Security Audits</h3>
+          <p class="mt-2 text-sm text-gray-400">We hunt for the weak spots in your systems before anyone else does.</p>
+          <span class="mt-4 inline-block rounded-full bg-red-600/25 px-3 py-1 text-xs font-mono text-red-400">POPULAR</span>
+        </div>
+
+        <!-- Card 2: Penetration Testing (eye icon) -->
+        <div class="blob blob-2 drip p-8 pb-10 text-center" style="--dx:56%; --dh:24px;">
+          <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-600/15 text-red-500">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </div>
+          <h3 class="mt-4 text-lg font-bold text-white">Penetration Testing</h3>
+          <p class="mt-2 text-sm text-gray-400">Authorized, simulated attacks that show how deep a real intruder could go.</p>
+          <span class="mt-4 inline-block rounded-full bg-white/10 px-3 py-1 text-xs font-mono text-gray-300">ADVANCED</span>
+        </div>
+
+        <!-- Card 3: Security Training (light bulb icon) -->
+        <div class="blob blob-3 drip p-8 pb-10 text-center" style="--dx:48%; --dh:38px;">
+          <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-600/15 text-red-500">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.517 0c.85.493 1.509 1.333 1.509 2.316V18" />
+            </svg>
+          </div>
+          <h3 class="mt-4 text-lg font-bold text-white">Security Training</h3>
+          <p class="mt-2 text-sm text-gray-400">Teach your team to spot phishing, scams and social-engineering tricks.</p>
+          <span class="mt-4 inline-block rounded-full bg-white/10 px-3 py-1 text-xs font-mono text-gray-300">BEGINNER</span>
+        </div>
+
+        <!-- Card 4: Incident Response (warning icon) -->
+        <div class="blob blob-4 drip p-8 pb-10 text-center" style="--dx:40%; --dh:28px;">
+          <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-600/15 text-red-500">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+            </svg>
+          </div>
+          <h3 class="mt-4 text-lg font-bold text-white">Incident Response</h3>
+          <p class="mt-2 text-sm text-gray-400">When something goes wrong, we arrive fast, contain it and clean up.</p>
+          <span class="mt-4 inline-block rounded-full bg-red-600/25 px-3 py-1 text-xs font-mono text-red-400">URGENT</span>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===== PROCESS TIMELINE: four numbered steps ===== -->
+    <section class="border-y border-white/10 bg-neutral-950">
+      <div class="max-w-6xl mx-auto px-4 py-20">
+
+        <p class="font-mono text-sm tracking-widest text-red-500">&gt; HOW_WE_OPERATE</p>
+        <h2 class="mt-2 text-3xl md:text-4xl font-bold text-white">Four Steps. Zero Mercy.</h2>
+        <div class="mt-3 h-1 w-12 bg-red-600"></div>
+
+        <div class="mt-12 grid gap-10 lg:grid-cols-4">
+
+          <div>
+            <div class="flex h-12 w-12 items-center justify-center rounded-full border border-red-600 font-mono text-lg font-bold text-red-500">01</div>
+            <h3 class="mt-4 text-lg font-bold text-white">Contact</h3>
+            <p class="mt-2 text-sm text-gray-400">You send a clearance request. We review it and reply within a day.</p>
+          </div>
+
+          <div>
+            <div class="flex h-12 w-12 items-center justify-center rounded-full border border-red-600 font-mono text-lg font-bold text-red-500">02</div>
+            <h3 class="mt-4 text-lg font-bold text-white">Recon</h3>
+            <p class="mt-2 text-sm text-gray-400">We quietly map your systems and find every door, window and crack.</p>
+          </div>
+
+          <div>
+            <div class="flex h-12 w-12 items-center justify-center rounded-full border border-red-600 font-mono text-lg font-bold text-red-500">03</div>
+            <h3 class="mt-4 text-lg font-bold text-white">Strike</h3>
+            <p class="mt-2 text-sm text-gray-400">With your permission, we test each weakness the way a real intruder would.</p>
+          </div>
+
+          <div>
+            <div class="flex h-12 w-12 items-center justify-center rounded-full bg-red-600 font-mono text-lg font-bold text-black">04</div>
+            <h3 class="mt-4 text-lg font-bold text-white">Report</h3>
+            <p class="mt-2 text-sm text-gray-400">You get a clear list of what was found and exactly how to fix it.</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TESTIMONIALS: three blood-spot quote cards (all names fictional) ===== -->
+    <section class="max-w-6xl mx-auto px-4 py-20">
+
+      <p class="font-mono text-sm tracking-widest text-red-500">&gt; WHAT_THEY_SAY</p>
+      <h2 class="mt-2 text-3xl md:text-4xl font-bold text-white">Whispers From Our Clients</h2>
+      <div class="mt-3 h-1 w-12 bg-red-600"></div>
+
+      <div class="mt-12 grid gap-12 md:grid-cols-3">
+
+        <div class="blob blob-2 drip p-10 pb-12 text-center" style="--dx:46%; --dh:30px;">
+          <p class="font-serif text-5xl leading-none text-red-600">&ldquo;</p>
+          <p class="mt-2 text-sm text-gray-300">They found a hole in our login system in under an hour. Terrifying, and exactly what we needed.</p>
+          <div class="mt-6 flex items-center justify-center gap-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-red-600/25 font-mono text-sm font-bold text-red-400">GH</div>
+            <div class="text-left">
+              <p class="text-sm font-bold text-white">GHOST_04</p>
+              <p class="text-xs text-gray-500">CTO, fictional fintech</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="blob blob-3 drip p-10 pb-12 text-center" style="--dx:54%; --dh:38px;">
+          <p class="font-serif text-5xl leading-none text-red-600">&ldquo;</p>
+          <p class="mt-2 text-sm text-gray-300">Their training changed how my whole team thinks about email. Nobody clicks blindly anymore.</p>
+          <div class="mt-6 flex items-center justify-center gap-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-red-600/25 font-mono text-sm font-bold text-red-400">NP</div>
+            <div class="text-left">
+              <p class="text-sm font-bold text-white">NULL_PTR</p>
+              <p class="text-xs text-gray-500">Head of IT, fictional university</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="blob blob-1 drip p-10 pb-12 text-center" style="--dx:42%; --dh:26px;">
+          <p class="font-serif text-5xl leading-none text-red-600">&ldquo;</p>
+          <p class="mt-2 text-sm text-gray-300">We were breached at 2 a.m. By 3 a.m. they had it contained. I have never felt safer.</p>
+          <div class="mt-6 flex items-center justify-center gap-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-red-600/25 font-mono text-sm font-bold text-red-400">R4</div>
+            <div class="text-left">
+              <p class="text-sm font-bold text-white">R4VEN</p>
+              <p class="text-xs text-gray-500">Founder, fictional online shop</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===== FAQ ACCORDION: click a question to open its answer ===== -->
+    <section class="border-t border-white/10 bg-neutral-950">
+      <div class="max-w-3xl mx-auto px-4 py-20">
+
+        <p class="font-mono text-sm tracking-widest text-red-500">&gt; ASK_THE_SHADOWS</p>
+        <h2 class="mt-2 text-3xl md:text-4xl font-bold text-white">Questions You Were Afraid to Ask</h2>
+        <div class="mt-3 h-1 w-12 bg-red-600"></div>
+
+        <div class="mt-10 space-y-5">
+
+          <details class="group blob blob-soft p-6">
+            <summary class="flex cursor-pointer list-none items-center justify-between font-bold text-white">
+              Is what you do legal?
+              <span class="text-2xl text-red-500 transition group-open:rotate-45">+</span>
+            </summary>
+            <p class="mt-3 text-sm text-gray-400">Always, in the story of this site. ZERO//DAY is a fictional collective that only tests systems with written permission from the owner.</p>
+          </details>
+
+          <details class="group blob blob-soft p-6">
+            <summary class="flex cursor-pointer list-none items-center justify-between font-bold text-white">
+              How long does a security audit take?
+              <span class="text-2xl text-red-500 transition group-open:rotate-45">+</span>
+            </summary>
+            <p class="mt-3 text-sm text-gray-400">Most audits take between three days and two weeks, depending on how large your systems are.</p>
+          </details>
+
+          <details class="group blob blob-soft p-6">
+            <summary class="flex cursor-pointer list-none items-center justify-between font-bold text-white">
+              Do I need technical knowledge to hire you?
+              <span class="text-2xl text-red-500 transition group-open:rotate-45">+</span>
+            </summary>
+            <p class="mt-3 text-sm text-gray-400">Not at all. Our reports are written in plain language, with clear steps for fixing each problem.</p>
+          </details>
+
+          <details class="group blob blob-soft p-6">
+            <summary class="flex cursor-pointer list-none items-center justify-between font-bold text-white">
+              How do I request clearance?
+              <span class="text-2xl text-red-500 transition group-open:rotate-45">+</span>
+            </summary>
+            <p class="mt-3 text-sm text-gray-400">Fill in the form on our Contact page, tell us which service you need, and we will reply within a day.</p>
+          </details>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CALL-TO-ACTION BANNER: one big blood pool ===== -->
+    <section class="max-w-6xl mx-auto px-4 py-24">
+      <div class="blob drip p-10 pb-14 md:p-16 md:pb-20 text-center"
+           style="border-radius: 55% 45% 50% 50% / 38% 42% 58% 62%; --dx:50%; --dh:44px;">
+        <p class="font-mono text-sm tracking-widest text-red-500">&gt; THE_DOOR_IS_OPEN</p>
+        <h2 class="mt-3 text-3xl md:text-5xl font-bold text-white">Ready to see what they see?</h2>
+        <p class="mx-auto mt-4 max-w-xl text-gray-400">Send us a request and we will show you every weakness in your systems before a real attacker finds it.</p>
+
+        <div class="mt-8 flex flex-wrap justify-center gap-4">
+          <a href="src/pages/contact.html"
+             class="rounded-full bg-red-600 px-8 py-3 font-bold text-white hover:bg-red-500 transition">
+            Request Clearance →
+          </a>
+          <a href="src/pages/about.html"
+             class="rounded-full border border-gray-600 px-8 py-3 text-gray-300 hover:border-white hover:text-white transition">
+            Meet the Collective
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== FOOTER (identical on every page) ===== -->
+  <footer class="border-t border-red-600/30 bg-black">
+    <div class="max-w-6xl mx-auto grid gap-8 px-4 py-10 md:grid-cols-3">
+
+      <div>
+        <p class="font-mono text-xl font-bold tracking-widest text-white">
+          ZERO<span class="text-red-500">//</span>DAY
+        </p>
+        <p class="mt-2 text-sm text-gray-500">Find the flaw before they do.</p>
+      </div>
+
+      <div>
+        <p class="font-bold text-white">Navigate</p>
+        <ul class="mt-2 space-y-1 text-sm">
+          <li><a href="index.html" class="hover:text-white">Home</a></li>
+          <li><a href="src/pages/about.html" class="hover:text-white">About</a></li>
+          <li><a href="src/pages/services.html" class="hover:text-white">Services</a></li>
+          <li><a href="src/pages/contact.html" class="hover:text-white">Contact</a></li>
+        </ul>
+      </div>
+
+      <!-- Social links: replace # with your real profile links later -->
+      <div>
+        <p class="font-bold text-white">Follow</p>
+        <ul class="mt-2 space-y-1 text-sm">
+          <li><a href="#" target="_blank" rel="noopener" class="hover:text-white">Instagram</a></li>
+          <li><a href="#" target="_blank" rel="noopener" class="hover:text-white">Twitter / X</a></li>
+          <li><a href="#" target="_blank" rel="noopener" class="hover:text-white">Facebook</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="border-t border-white/10 py-4 text-center text-xs text-gray-600">
+      © 2026 ZERO//DAY. A fictional project for a web design assignment.
+    </p>
+  </footer>
+
+  <!-- Phone menu switch: the only JavaScript -->
+  <script>
+    document.getElementById("menu-btn").addEventListener("click", function () {
+      document.getElementById("mobile-menu").classList.toggle("hidden");
+    });
+  </script>
+</body>
+</html>
