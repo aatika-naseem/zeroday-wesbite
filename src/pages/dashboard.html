@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Threat Log | ZERO//DAY</title>
+    <meta name="description" content="Internal Threat Log and Live Global Intel." />
+    <link rel="icon" type="image/svg+xml" href="../../assets/icons/favicon.svg" />
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Axios CDN (Required for API Integration) -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <style>
+        /* Blob styles for consistency */
+        .blob {
+            background: radial-gradient(circle at 35% 25%, rgba(185, 28, 28, .40), rgba(25, 0, 0, .96) 62%);
+            border: 1px solid rgba(220, 38, 38, .55);
+            box-shadow: 0 0 40px rgba(127, 29, 29, .40), inset 0 0 35px rgba(0, 0, 0, .85);
+            transition: transform .3s ease;
+        }
+
+        .blob:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Custom Scrollbar for the feed */
+        .custom-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scroll::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #dc2626;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+
+<body class="bg-black text-gray-300 font-mono min-h-screen flex flex-col">
+
+    <!-- ===== NAVBAR ===== -->
+    <nav class="sticky top-0 z-50 bg-black/80 backdrop-blur border-b border-red-600/30">
+        <div class="max-w-6xl mx-auto flex items-center justify-between px-4 py-4">
+            <a href="../../index.html" class="font-mono text-2xl font-bold tracking-widest text-white">
+                ZERO<span class="text-red-500">//</span>DAY
+            </a>
+            <ul class="hidden md:flex items-center gap-6 text-sm uppercase tracking-wider">
+                <li><a href="../../index.html" class="hover:text-white">Home</a></li>
+                <li><a href="about.html" class="hover:text-white">About</a></li>
+                <li><a href="services.html" class="hover:text-white">Services</a></li>
+                <li><a href="contact.html" class="hover:text-white">Contact</a></li>
+                <!-- Active Dashboard Link -->
+                <li><a href="dashboard.html" class="text-white border-b-2 border-red-600 pb-1">Threat Log</a></li>
+                <li><a href="signin.html" class="hover:text-white">Sign In</a></li>
+            </ul>
+            <button id="menu-btn" class="md:hidden text-3xl text-white">☰</button>
+        </div>
+        <ul id="mobile-menu" class="hidden md:hidden flex-col gap-3 px-4 pb-4 text-sm uppercase tracking-wider">
+            <li><a href="../../index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="services.html">Services</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="dashboard.html" class="text-red-500">Threat Log</a></li>
+            <li><a href="signin.html">Sign In</a></li>
+        </ul>
+    </nav>
+
+    <main class="flex-grow max-w-6xl mx-auto px-4 py-12 w-full">
+
+        <!-- PAGE HEADER -->
+        <div class="mb-10 border-b border-red-900/50 pb-6">
+            <h1 class="text-3xl md:text-5xl font-bold text-white mb-2">Internal Threat Log</h1>
+            <p class="text-red-500 font-mono text-sm tracking-widest">&gt; SECURE_TERMINAL_ACTIVE</p>
+        </div>
+
+        <div class="grid lg:grid-cols-3 gap-8">
+
+            <!-- ========================================== -->
+            <!-- TASK 1: CRUD APPLICATION                   -->
+            <!-- ========================================== -->
+            <div class="lg:col-span-2 space-y-8">
+
+                <!-- Form (Create / Update) -->
+                <div class="bg-neutral-950 border border-red-900/30 p-6 rounded-lg relative overflow-hidden">
+                    <!-- Decorative terminal dots -->
+                    <div class="absolute top-3 right-3 flex gap-1">
+                        <div class="w-2 h-2 rounded-full bg-red-600"></div>
+                        <div class="w-2 h-2 rounded-full bg-yellow-600"></div>
+                        <div class="w-2 h-2 rounded-full bg-green-600"></div>
+                    </div>
+
+                    <h2 class="text-xl font-bold text-white mb-6 uppercase tracking-wider flex items-center gap-2">
+                        <span class="text-red-500">►</span> <span id="form-title">Log New Vulnerability</span>
+                    </h2>
+
+                    <form id="target-form" class="space-y-5">
+                        <input type="hidden" id="target-id" />
+
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs text-gray-500 mb-1 tracking-widest">TARGET_NAME</label>
+                                <input type="text" id="target-name" required
+                                    class="w-full bg-black border border-gray-700 text-white px-3 py-2 focus:border-red-500 focus:outline-none font-mono text-sm"
+                                    placeholder="e.g. Acme Corp" />
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-500 mb-1 tracking-widest">SEVERITY_LEVEL</label>
+                                <select id="target-level"
+                                    class="w-full bg-black border border-gray-700 text-white px-3 py-2 focus:border-red-500 focus:outline-none font-mono text-sm">
+                                    <option value="Low">LOW (Green)</option>
+                                    <option value="Medium">MEDIUM (Yellow)</option>
+                                    <option value="High">HIGH (Orange)</option>
+                                    <option value="Critical">CRITICAL (Red)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label
+                                class="block text-xs text-gray-500 mb-1 tracking-widest">VULNERABILITY_DETAILS</label>
+                            <textarea id="target-notes" required rows="3"
+                                class="w-full bg-black border border-gray-700 text-white px-3 py-2 focus:border-red-500 focus:outline-none font-mono text-sm"
+                                placeholder="Describe the exploit vector..."></textarea>
+                        </div>
+
+                        <div class="flex gap-4 pt-2">
+                            <button type="submit" id="submit-btn"
+                                class="bg-red-600 text-black px-6 py-2 font-bold hover:bg-red-500 transition font-mono tracking-widest text-sm">EXECUTE_ADD</button>
+                            <button type="button" id="cancel-btn"
+                                class="hidden text-gray-400 hover:text-white px-4 py-2 font-mono text-sm border border-gray-800 hover:border-white transition">CANCEL_EDIT</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- List & Search (Read / Filter) -->
+                <div>
+                    <div class="flex flex-col md:flex-row justify-between items-end mb-4 gap-4">
+                        <h2 class="text-xl font-bold text-white uppercase tracking-wider">Logged Vulnerabilities</h2>
+                        <!-- Search Bar -->
+                        <div class="w-full md:w-auto relative">
+                            <input type="text" id="search-input" placeholder="Search database..."
+                                class="w-full md:w-64 bg-black border border-red-900/50 text-white px-3 py-2 text-sm focus:border-red-500 focus:outline-none font-mono tracking-wider placeholder-gray-700" />
+                            <span class="absolute right-3 top-2 text-red-900">⌕</span>
+                        </div>
+                    </div>
+
+                    <!-- Where records will be injected -->
+                    <div id="target-list" class="space-y-4">
+                        <!-- Cards go here via JS -->
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ========================================== -->
+            <!-- TASK 2: AXIOS API INTEGRATION              -->
+            <!-- ========================================== -->
+            <div class="lg:col-span-1">
+                <div class="bg-neutral-950 border border-red-900/30 p-5 rounded-lg sticky top-24">
+                    <div class="flex items-center justify-between mb-4 border-b border-gray-800 pb-2">
+                        <h2 class="text-sm font-bold text-white uppercase tracking-widest flex items-center gap-2">
+                            <span class="w-2 h-2 bg-red-500 rounded-full animate-ping"></span>
+                            Global Intel Feed
+                        </h2>
+                        <span class="text-[10px] text-gray-600">AXIOS_GET</span>
+                    </div>
+
+                    <!-- Loading State -->
+                    <div id="api-loading" class="text-center py-8 text-red-500 animate-pulse text-xs tracking-widest">
+                        [ ESTABLISHING_UPLINK... ]
+                    </div>
+
+                    <!-- Error State -->
+                    <div id="api-error"
+                        class="hidden text-center py-8 text-red-800 text-xs border border-red-900/50 bg-red-950/20">
+                        [ ERROR: UPLINK_FAILED ]
+                    </div>
+
+                    <!-- Data Container -->
+                    <div id="api-data" class="hidden space-y-3 max-h-[600px] overflow-y-auto custom-scroll pr-2">
+                        <!-- API results go here -->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-red-600/30 bg-black mt-12 py-6 text-center text-xs text-gray-600">
+        © 2026 ZERO//DAY. Internal Systems.
+    </footer>
+
+    <!-- ========================================== -->
+    <!-- JAVASCRIPT LOGIC                           -->
+    <!-- ========================================== -->
+    <script>
+        // Mobile Menu
+        document.getElementById("menu-btn").addEventListener("click", function () {
+            document.getElementById("mobile-menu").classList.toggle("hidden");
+        });
+
+        // ==========================================
+        // TASK 1: CRUD & LOCAL STORAGE
+        // ==========================================
+        const form = document.getElementById('target-form');
+        const idInput = document.getElementById('target-id');
+        const nameInput = document.getElementById('target-name');
+        const levelInput = document.getElementById('target-level');
+        const notesInput = document.getElementById('target-notes');
+        const listContainer = document.getElementById('target-list');
+        const searchInput = document.getElementById('search-input');
+        const formTitle = document.getElementById('form-title');
+        const submitBtn = document.getElementById('submit-btn');
+        const cancelBtn = document.getElementById('cancel-btn');
+
+        // 1. Initialize array from LocalStorage
+        let targets = JSON.parse(localStorage.getItem('zeroday_targets')) || [];
+
+        // 2. Read/Display Function
+        function renderTargets(filterText = "") {
+            listContainer.innerHTML = "";
+
+            // Filter Logic
+            const filteredTargets = targets.filter(target =>
+                target.name.toLowerCase().includes(filterText.toLowerCase()) ||
+                target.level.toLowerCase().includes(filterText.toLowerCase())
+            );
+
+            if (filteredTargets.length === 0) {
+                listContainer.innerHTML = `<p class="text-gray-600 text-sm italic border border-gray-800 p-4 text-center">NO_RECORDS_FOUND</p>`;
+                return;
+            }
+
+            // Map Logic to build UI
+            filteredTargets.map(target => {
+                const div = document.createElement('div');
+
+                // Dynamic border color based on severity
+                let borderColor = "border-green-900/50";
+                let textColor = "text-green-400";
+                if (target.level === "Medium") { borderColor = "border-yellow-900/50"; textColor = "text-yellow-400"; }
+                if (target.level === "High") { borderColor = "border-orange-900/50"; textColor = "text-orange-400"; }
+                if (target.level === "Critical") { borderColor = "border-red-900/80"; textColor = "text-red-500 animate-pulse"; }
+
+                div.className = `bg-black border ${borderColor} p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 transition hover:bg-neutral-900`;
+
+                div.innerHTML = `
+          <div class="flex-grow">
+            <div class="flex items-center gap-3 mb-1">
+              <h3 class="font-bold text-white text-lg tracking-wider">${target.name}</h3>
+              <span class="text-[10px] ${textColor} border border-current px-2 py-0.5 rounded tracking-widest">${target.level}</span>
+            </div>
+            <p class="text-xs text-gray-400 font-mono leading-relaxed">&gt; ${target.notes}</p>
+          </div>
+          <div class="flex gap-2 w-full md:w-auto">
+            <button onclick="editTarget('${target.id}')" class="flex-1 md:flex-none text-gray-400 hover:text-white px-3 py-1.5 text-xs border border-gray-700 hover:border-white transition tracking-widest">EDIT</button>
+            <button onclick="deleteTarget('${target.id}')" class="flex-1 md:flex-none text-red-500 hover:text-red-400 px-3 py-1.5 text-xs border border-red-900 hover:border-red-500 transition tracking-widest">PURGE</button>
+          </div>
+        `;
+                listContainer.appendChild(div);
+            });
+        }
+
+        // 3. Create & Update Function
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const id = idInput.value;
+            const name = nameInput.value;
+            const level = levelInput.value;
+            const notes = notesInput.value;
+
+            if (id) {
+                // Update
+                targets = targets.map(t => t.id === id ? { ...t, name, level, notes } : t);
+            } else {
+                // Create
+                targets.push({ id: Date.now().toString(), name, level, notes });
+            }
+
+            // Save to LocalStorage
+            localStorage.setItem('zeroday_targets', JSON.stringify(targets));
+
+            // Reset Form
+            form.reset();
+            idInput.value = "";
+            formTitle.textContent = "Log New Vulnerability";
+            submitBtn.textContent = "EXECUTE_ADD";
+            submitBtn.classList.remove('bg-green-600', 'hover:bg-green-500');
+            submitBtn.classList.add('bg-red-600', 'hover:bg-red-500');
+            cancelBtn.classList.add('hidden');
+
+            renderTargets(searchInput.value);
+        });
+
+        // 4. Edit Function
+        window.editTarget = (id) => {
+            const target = targets.find(t => t.id === id);
+            if (!target) return;
+
+            idInput.value = target.id;
+            nameInput.value = target.name;
+            levelInput.value = target.level;
+            notesInput.value = target.notes;
+
+            formTitle.textContent = "Update Vulnerability Data";
+            submitBtn.textContent = "EXECUTE_UPDATE";
+            submitBtn.classList.remove('bg-red-600', 'hover:bg-red-500');
+            submitBtn.classList.add('bg-green-600', 'hover:bg-green-500');
+            cancelBtn.classList.remove('hidden');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        // Cancel Edit
+        cancelBtn.addEventListener('click', () => {
+            form.reset();
+            idInput.value = "";
+            formTitle.textContent = "Log New Vulnerability";
+            submitBtn.textContent = "EXECUTE_ADD";
+            submitBtn.classList.remove('bg-green-600', 'hover:bg-green-500');
+            submitBtn.classList.add('bg-red-600', 'hover:bg-red-500');
+            cancelBtn.classList.add('hidden');
+        });
+
+        // 5. Delete Function
+        window.deleteTarget = (id) => {
+            if (confirm("WARNING: PURGE RECORD? THIS CANNOT BE UNDONE.")) {
+                targets = targets.filter(t => t.id !== id);
+                localStorage.setItem('zeroday_targets', JSON.stringify(targets));
+                renderTargets(searchInput.value);
+            }
+        };
+
+        // 6. Search Event
+        searchInput.addEventListener('input', (e) => {
+            renderTargets(e.target.value);
+        });
+
+        // Initial Render
+        renderTargets();
+
+
+        // ==========================================
+        // TASK 2: AXIOS API INTEGRATION (IP RECON)
+        // ==========================================
+        async function fetchThreatIntel() {
+            const loading = document.getElementById('api-loading');
+            const error = document.getElementById('api-error');
+            const dataContainer = document.getElementById('api-data');
+
+            try {
+                // Fetching REAL network data using ipwho.is
+                const response = await axios.get('https://ipwho.is/');
+
+                loading.classList.add('hidden');
+                dataContainer.classList.remove('hidden');
+                dataContainer.innerHTML = '';
+
+                const data = response.data;
+
+                // Build the "Terminal Scan" UI
+                dataContainer.innerHTML = `
+          <div class="border border-red-900/30 bg-black p-4 rounded text-xs space-y-3 font-mono">
+            
+            <div class="flex justify-between border-b border-gray-800 pb-2">
+              <span class="text-gray-500">TARGET_IP:</span>
+              <span class="text-red-500 font-bold animate-pulse">${data.ip}</span>
+            </div>
+
+            <div class="flex justify-between border-b border-gray-800 pb-2">
+              <span class="text-gray-500">LOCATION:</span>
+              <span class="text-gray-300">${data.city}, ${data.country}</span>
+            </div>
+
+            <div class="flex justify-between border-b border-gray-800 pb-2">
+              <span class="text-gray-500">ISP_PROVIDER:</span>
+              <span class="text-gray-300 truncate max-w-[150px] text-right">${data.connection.isp}</span>
+            </div>
+
+            <div class="flex justify-between border-b border-gray-800 pb-2">
+              <span class="text-gray-500">ASN_CODE:</span>
+              <span class="text-gray-300">${data.connection.asn}</span>
+            </div>
+
+            <div class="flex justify-between pb-1">
+              <span class="text-gray-500">STATUS:</span>
+              <span class="text-green-500 font-bold">[ SECURE ]</span>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-red-900/50">
+              <p class="text-gray-600 text-[10px] leading-tight">
+                &gt; Traceroute complete. Firewall bypassed. Target network mapped successfully. No anomalies detected.
+              </p>
+            </div>
+          </div>
+        `;
+
+            } catch (err) {
+                loading.classList.add('hidden');
+                error.classList.remove('hidden');
+                console.error("API Error:", err);
+            }
+        }
+
+        // Call the API
+        fetchThreatIntel();
+
+    </script>
+</body>
+
+</html>

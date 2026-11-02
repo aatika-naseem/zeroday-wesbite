@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,12 +11,32 @@
 
   <style>
     @keyframes glitch {
-      0%, 100% { text-shadow: 2px 0 #ef4444, -2px 0 #ffffff55; transform: translate(0); }
-      20% { text-shadow: -3px 0 #ef4444, 3px 0 #ffffff55; transform: translate(-2px, 1px); }
-      40% { text-shadow: 3px 0 #ef4444, -3px 0 #ffffff55; transform: translate(2px, -1px); }
-      60% { text-shadow: 0 0 #ef4444; transform: translate(0); }
+
+      0%,
+      100% {
+        text-shadow: 2px 0 #ef4444, -2px 0 #ffffff55;
+        transform: translate(0);
+      }
+
+      20% {
+        text-shadow: -3px 0 #ef4444, 3px 0 #ffffff55;
+        transform: translate(-2px, 1px);
+      }
+
+      40% {
+        text-shadow: 3px 0 #ef4444, -3px 0 #ffffff55;
+        transform: translate(2px, -1px);
+      }
+
+      60% {
+        text-shadow: 0 0 #ef4444;
+        transform: translate(0);
+      }
     }
-    .glitch { animation: glitch 2.5s infinite steps(1); }
+
+    .glitch {
+      animation: glitch 2.5s infinite steps(1);
+    }
 
     /* ===== BLOOD-SPOT BLOBS (same as the other pages) ===== */
     .blob {
@@ -24,16 +45,40 @@
       box-shadow: 0 0 40px rgba(127, 29, 29, .40), inset 0 0 35px rgba(0, 0, 0, .85);
       transition: border-radius .8s ease, transform .3s ease, box-shadow .3s ease;
     }
-    .blob-1 { border-radius: 58% 42% 55% 45% / 48% 56% 44% 52%; }
-    .blob-2 { border-radius: 42% 58% 46% 54% / 56% 44% 56% 44%; }
-    .blob-3 { border-radius: 52% 48% 38% 62% / 45% 55% 45% 55%; }
-    .blob:hover { transform: translateY(-6px); box-shadow: 0 0 55px rgba(220, 38, 38, .45), inset 0 0 35px rgba(0, 0, 0, .85); }
-    .blob-1:hover { border-radius: 44% 56% 42% 58% / 56% 44% 56% 44%; }
-    .blob-2:hover { border-radius: 56% 44% 58% 42% / 44% 58% 42% 56%; }
-    .blob-3:hover { border-radius: 40% 60% 55% 45% / 58% 42% 58% 42%; }
+
+    .blob-1 {
+      border-radius: 58% 42% 55% 45% / 48% 56% 44% 52%;
+    }
+
+    .blob-2 {
+      border-radius: 42% 58% 46% 54% / 56% 44% 56% 44%;
+    }
+
+    .blob-3 {
+      border-radius: 52% 48% 38% 62% / 45% 55% 45% 55%;
+    }
+
+    .blob:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 0 55px rgba(220, 38, 38, .45), inset 0 0 35px rgba(0, 0, 0, .85);
+    }
+
+    .blob-1:hover {
+      border-radius: 44% 56% 42% 58% / 56% 44% 56% 44%;
+    }
+
+    .blob-2:hover {
+      border-radius: 56% 44% 58% 42% / 44% 58% 42% 56%;
+    }
+
+    .blob-3:hover {
+      border-radius: 40% 60% 55% 45% / 58% 42% 58% 42%;
+    }
 
     /* Softer organic shape for wide boxes (FAQ) */
-    .blob-soft { border-radius: 2.5rem 1rem 3rem 1rem / 1rem 2.5rem 1rem 3rem; }
+    .blob-soft {
+      border-radius: 2.5rem 1rem 3rem 1rem / 1rem 2.5rem 1rem 3rem;
+    }
 
     /* The form card: same blood look, but it must NOT lift or morph on hover while you type */
     .form-blob {
@@ -44,10 +89,17 @@
     }
 
     /* Drip hanging from the bottom edge (--dx = position, --dh = length) */
-    .drip { position: relative; }
+    .drip {
+      position: relative;
+    }
+
     .drip::after {
-      content: ""; position: absolute; top: calc(100% - 8px); left: var(--dx, 50%);
-      width: 10px; height: var(--dh, 30px);
+      content: "";
+      position: absolute;
+      top: calc(100% - 8px);
+      left: var(--dx, 50%);
+      width: 10px;
+      height: var(--dh, 30px);
       background: linear-gradient(#991b1b, #dc2626);
       border-radius: 0 0 10px 10px;
       box-shadow: 0 0 10px rgba(220, 38, 38, .5);
@@ -70,11 +122,12 @@
         <li><a href="about.html" class="hover:text-white">About</a></li>
         <li><a href="services.html" class="hover:text-white">Services</a></li>
         <li><a href="contact.html" class="hover:text-white">Contact</a></li>
+        <li><a href="dashboard.html" class="hover:text-white">Threat Log</a></li>
         <li><a href="signin.html" class="hover:text-white">Sign In</a></li>
         <li>
           <!-- Current page: filled red button -->
           <a href="signup.html"
-             class="rounded-full border border-red-600 bg-red-600 px-5 py-2 text-white hover:bg-red-500 transition">
+            class="rounded-full border border-red-600 bg-red-600 px-5 py-2 text-white hover:bg-red-500 transition">
             Sign Up
           </a>
         </li>
@@ -88,6 +141,7 @@
       <li><a href="about.html">About</a></li>
       <li><a href="services.html">Services</a></li>
       <li><a href="contact.html">Contact</a></li>
+      <li><a href="dashboard.html" class="hover:text-white">Threat Log</a></li>
       <li><a href="signin.html">Sign In</a></li>
       <li><a href="signup.html" class="text-white">Sign Up</a></li>
     </ul>
@@ -100,12 +154,13 @@
     <section class="grid lg:grid-cols-2">
 
       <!-- RIGHT on desktop / TOP on phones: photo panel (order classes swap the sides) -->
-      <div class="relative order-1 lg:order-2 min-h-[320px] lg:min-h-[760px] overflow-hidden border-b lg:border-b-0 lg:border-l border-red-600/30">
+      <div
+        class="relative order-1 lg:order-2 min-h-[320px] lg:min-h-[760px] overflow-hidden border-b lg:border-b-0 lg:border-l border-red-600/30">
 
         <!-- Layer 1: the red portrait, in its own colours.
              object-[50%_30%] keeps the mask in view -->
         <img src="../../assets/images/sign-in.jpg" alt="Hooded figure wearing a mask against a red wall"
-             class="absolute inset-0 h-full w-full object-cover object-[50%_30%] brightness-90 contrast-110" />
+          class="absolute inset-0 h-full w-full object-cover object-[50%_30%] brightness-90 contrast-110" />
         <!-- Layer 2: fade to black at the bottom so the text stays readable -->
         <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/10"></div>
 
@@ -137,21 +192,21 @@
             <div>
               <label for="name" class="block text-sm font-bold text-white">Codename</label>
               <input id="name" name="name" type="text" required minlength="2" placeholder="e.g. GHOST_04"
-                     class="mt-2 w-full rounded-lg border border-white/15 bg-black/70 px-4 py-3 text-white placeholder-gray-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600" />
+                class="mt-2 w-full rounded-lg border border-white/15 bg-black/70 px-4 py-3 text-white placeholder-gray-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600" />
             </div>
 
             <!-- Email: type="email" makes the browser check the format -->
             <div>
               <label for="email" class="block text-sm font-bold text-white">Email address</label>
               <input id="email" name="email" type="email" required placeholder="you@example.com"
-                     class="mt-2 w-full rounded-lg border border-white/15 bg-black/70 px-4 py-3 text-white placeholder-gray-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600" />
+                class="mt-2 w-full rounded-lg border border-white/15 bg-black/70 px-4 py-3 text-white placeholder-gray-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600" />
             </div>
 
             <!-- Interest dropdown: the empty first option forces a real choice -->
             <div>
               <label for="interest" class="block text-sm font-bold text-white">What interests you most?</label>
               <select id="interest" name="interest" required
-                      class="mt-2 w-full rounded-lg border border-white/15 bg-black/70 px-4 py-3 text-white focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600">
+                class="mt-2 w-full rounded-lg border border-white/15 bg-black/70 px-4 py-3 text-white focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600">
                 <option value="">Choose one...</option>
                 <option>Security audits</option>
                 <option>Penetration testing</option>
@@ -163,15 +218,16 @@
             <!-- Password: at least 8 characters -->
             <div>
               <label for="password" class="block text-sm font-bold text-white">Password</label>
-              <input id="password" name="password" type="password" required minlength="8" placeholder="At least 8 characters"
-                     class="mt-2 w-full rounded-lg border border-white/15 bg-black/70 px-4 py-3 text-white placeholder-gray-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600" />
+              <input id="password" name="password" type="password" required minlength="8"
+                placeholder="At least 8 characters"
+                class="mt-2 w-full rounded-lg border border-white/15 bg-black/70 px-4 py-3 text-white placeholder-gray-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600" />
             </div>
 
             <!-- Confirm password: the script checks it matches the one above -->
             <div>
               <label for="confirm" class="block text-sm font-bold text-white">Confirm password</label>
               <input id="confirm" name="confirm" type="password" required minlength="8" placeholder="Type it again"
-                     class="mt-2 w-full rounded-lg border border-white/15 bg-black/70 px-4 py-3 text-white placeholder-gray-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600" />
+                class="mt-2 w-full rounded-lg border border-white/15 bg-black/70 px-4 py-3 text-white placeholder-gray-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600" />
             </div>
 
             <!-- Terms checkbox: must be ticked -->
@@ -181,12 +237,13 @@
             </label>
 
             <button type="submit"
-                    class="w-full rounded-full bg-red-600 px-8 py-3 font-bold text-white hover:bg-red-500 transition">
+              class="w-full rounded-full bg-red-600 px-8 py-3 font-bold text-white hover:bg-red-500 transition">
               Request Membership →
             </button>
 
             <!-- Message box: the script fills it in and shows it (error or demo notice) -->
-            <div id="signup-msg" class="hidden rounded-lg border border-red-600/50 bg-red-950/40 p-4 text-sm text-red-300"></div>
+            <div id="signup-msg"
+              class="hidden rounded-lg border border-red-600/50 bg-red-950/40 p-4 text-sm text-red-300"></div>
           </form>
 
           <!-- Divider with the word "or" in the middle -->
@@ -196,8 +253,10 @@
 
           <!-- Social buttons (visual only) -->
           <div class="grid grid-cols-2 gap-3">
-            <button type="button" class="rounded-full border border-white/20 px-4 py-2 text-sm hover:border-red-600 hover:text-white transition">Google</button>
-            <button type="button" class="rounded-full border border-white/20 px-4 py-2 text-sm hover:border-red-600 hover:text-white transition">GitHub</button>
+            <button type="button"
+              class="rounded-full border border-white/20 px-4 py-2 text-sm hover:border-red-600 hover:text-white transition">Google</button>
+            <button type="button"
+              class="rounded-full border border-white/20 px-4 py-2 text-sm hover:border-red-600 hover:text-white transition">GitHub</button>
           </div>
 
           <p class="mt-8 text-center text-sm text-gray-500">
@@ -219,19 +278,25 @@
         <div class="mt-12 grid gap-12 md:grid-cols-3">
 
           <div class="blob blob-1 drip p-10 pb-12 text-center" style="--dx:44%; --dh:32px;">
-            <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-red-600 font-mono text-lg font-bold text-red-500">01</div>
+            <div
+              class="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-red-600 font-mono text-lg font-bold text-red-500">
+              01</div>
             <h3 class="mt-4 text-lg font-bold text-white">Send a request</h3>
             <p class="mt-2 text-sm text-gray-400">Fill in the form with a codename and an email address.</p>
           </div>
 
           <div class="blob blob-3 drip p-10 pb-12 text-center" style="--dx:54%; --dh:40px;">
-            <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-red-600 font-mono text-lg font-bold text-red-500">02</div>
+            <div
+              class="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-red-600 font-mono text-lg font-bold text-red-500">
+              02</div>
             <h3 class="mt-4 text-lg font-bold text-white">We review it</h3>
             <p class="mt-2 text-sm text-gray-400">A member of the collective reads every single request.</p>
           </div>
 
           <div class="blob blob-2 drip p-10 pb-12 text-center" style="--dx:40%; --dh:26px;">
-            <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-600 font-mono text-lg font-bold text-black">03</div>
+            <div
+              class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-600 font-mono text-lg font-bold text-black">
+              03</div>
             <h3 class="mt-4 text-lg font-bold text-white">Welcome in</h3>
             <p class="mt-2 text-sm text-gray-400">You get access to the terminal, reports and training.</p>
           </div>
@@ -254,7 +319,8 @@
             Does membership cost anything?
             <span class="text-2xl text-red-500 transition group-open:rotate-45">+</span>
           </summary>
-          <p class="mt-3 text-sm text-gray-400">No. Requesting membership is free on this fictional site, and no payment details are ever asked for.</p>
+          <p class="mt-3 text-sm text-gray-400">No. Requesting membership is free on this fictional site, and no payment
+            details are ever asked for.</p>
         </details>
 
         <details class="group blob blob-soft p-6">
@@ -262,7 +328,8 @@
             Is my information really saved?
             <span class="text-2xl text-red-500 transition group-open:rotate-45">+</span>
           </summary>
-          <p class="mt-3 text-sm text-gray-400">No. This is a demo form for a web design assignment, so nothing you type here is stored or sent anywhere.</p>
+          <p class="mt-3 text-sm text-gray-400">No. This is a demo form for a web design assignment, so nothing you type
+            here is stored or sent anywhere.</p>
         </details>
 
       </div>
@@ -331,4 +398,5 @@
     });
   </script>
 </body>
+
 </html>

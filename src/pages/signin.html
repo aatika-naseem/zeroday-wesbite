@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,12 +11,32 @@
 
   <style>
     @keyframes glitch {
-      0%, 100% { text-shadow: 2px 0 #ef4444, -2px 0 #ffffff55; transform: translate(0); }
-      20% { text-shadow: -3px 0 #ef4444, 3px 0 #ffffff55; transform: translate(-2px, 1px); }
-      40% { text-shadow: 3px 0 #ef4444, -3px 0 #ffffff55; transform: translate(2px, -1px); }
-      60% { text-shadow: 0 0 #ef4444; transform: translate(0); }
+
+      0%,
+      100% {
+        text-shadow: 2px 0 #ef4444, -2px 0 #ffffff55;
+        transform: translate(0);
+      }
+
+      20% {
+        text-shadow: -3px 0 #ef4444, 3px 0 #ffffff55;
+        transform: translate(-2px, 1px);
+      }
+
+      40% {
+        text-shadow: 3px 0 #ef4444, -3px 0 #ffffff55;
+        transform: translate(2px, -1px);
+      }
+
+      60% {
+        text-shadow: 0 0 #ef4444;
+        transform: translate(0);
+      }
     }
-    .glitch { animation: glitch 2.5s infinite steps(1); }
+
+    .glitch {
+      animation: glitch 2.5s infinite steps(1);
+    }
 
     /* ===== BLOOD-SPOT BLOBS (same as the other pages) ===== */
     .blob {
@@ -24,16 +45,40 @@
       box-shadow: 0 0 40px rgba(127, 29, 29, .40), inset 0 0 35px rgba(0, 0, 0, .85);
       transition: border-radius .8s ease, transform .3s ease, box-shadow .3s ease;
     }
-    .blob-1 { border-radius: 58% 42% 55% 45% / 48% 56% 44% 52%; }
-    .blob-2 { border-radius: 42% 58% 46% 54% / 56% 44% 56% 44%; }
-    .blob-3 { border-radius: 52% 48% 38% 62% / 45% 55% 45% 55%; }
-    .blob:hover { transform: translateY(-6px); box-shadow: 0 0 55px rgba(220, 38, 38, .45), inset 0 0 35px rgba(0, 0, 0, .85); }
-    .blob-1:hover { border-radius: 44% 56% 42% 58% / 56% 44% 56% 44%; }
-    .blob-2:hover { border-radius: 56% 44% 58% 42% / 44% 58% 42% 56%; }
-    .blob-3:hover { border-radius: 40% 60% 55% 45% / 58% 42% 58% 42%; }
+
+    .blob-1 {
+      border-radius: 58% 42% 55% 45% / 48% 56% 44% 52%;
+    }
+
+    .blob-2 {
+      border-radius: 42% 58% 46% 54% / 56% 44% 56% 44%;
+    }
+
+    .blob-3 {
+      border-radius: 52% 48% 38% 62% / 45% 55% 45% 55%;
+    }
+
+    .blob:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 0 55px rgba(220, 38, 38, .45), inset 0 0 35px rgba(0, 0, 0, .85);
+    }
+
+    .blob-1:hover {
+      border-radius: 44% 56% 42% 58% / 56% 44% 56% 44%;
+    }
+
+    .blob-2:hover {
+      border-radius: 56% 44% 58% 42% / 44% 58% 42% 56%;
+    }
+
+    .blob-3:hover {
+      border-radius: 40% 60% 55% 45% / 58% 42% 58% 42%;
+    }
 
     /* Softer organic shape for wide boxes (FAQ): readable, but not square */
-    .blob-soft { border-radius: 2.5rem 1rem 3rem 1rem / 1rem 2.5rem 1rem 3rem; }
+    .blob-soft {
+      border-radius: 2.5rem 1rem 3rem 1rem / 1rem 2.5rem 1rem 3rem;
+    }
 
     /* The form card: same blood look, but it must NOT lift or morph when you hover, because you're typing in it */
     .form-blob {
@@ -44,10 +89,17 @@
     }
 
     /* Drip hanging from the bottom edge (--dx = position, --dh = length) */
-    .drip { position: relative; }
+    .drip {
+      position: relative;
+    }
+
     .drip::after {
-      content: ""; position: absolute; top: calc(100% - 8px); left: var(--dx, 50%);
-      width: 10px; height: var(--dh, 30px);
+      content: "";
+      position: absolute;
+      top: calc(100% - 8px);
+      left: var(--dx, 50%);
+      width: 10px;
+      height: var(--dh, 30px);
       background: linear-gradient(#991b1b, #dc2626);
       border-radius: 0 0 10px 10px;
       box-shadow: 0 0 10px rgba(220, 38, 38, .5);
@@ -70,10 +122,11 @@
         <li><a href="about.html" class="hover:text-white">About</a></li>
         <li><a href="services.html" class="hover:text-white">Services</a></li>
         <li><a href="contact.html" class="hover:text-white">Contact</a></li>
+        <li><a href="dashboard.html" class="hover:text-white">Threat Log</a></li>
         <li><a href="signin.html" class="text-white border-b-2 border-red-600 pb-1">Sign In</a></li>
         <li>
           <a href="signup.html"
-             class="rounded-full border border-red-600 px-5 py-2 text-red-500 hover:bg-red-600 hover:text-white transition">
+            class="rounded-full border border-red-600 px-5 py-2 text-red-500 hover:bg-red-600 hover:text-white transition">
             Sign Up
           </a>
         </li>
@@ -87,6 +140,7 @@
       <li><a href="about.html">About</a></li>
       <li><a href="services.html">Services</a></li>
       <li><a href="contact.html">Contact</a></li>
+      <li><a href="dashboard.html" class="hover:text-white">Threat Log</a></li>
       <li><a href="signin.html" class="text-white">Sign In</a></li>
       <li><a href="signup.html">Sign Up</a></li>
     </ul>
@@ -99,16 +153,17 @@
     <section class="grid lg:grid-cols-2">
 
       <!-- LEFT: photo panel. On phones it sits on top and is shorter -->
-      <div class="relative min-h-[320px] lg:min-h-[640px] overflow-hidden border-b lg:border-b-0 lg:border-r border-red-600/30">
+      <div
+        class="relative min-h-[320px] lg:min-h-[640px] overflow-hidden border-b lg:border-b-0 lg:border-r border-red-600/30">
 
         <!-- Layer 1: the photo, in its own colours (it's already red, so no grayscale or tint).
      object-[50%_25%] keeps the mask in view instead of cropping to the middle -->
-<img src="../../assets/images/sign-in.jpg" alt="Masked figure holding an umbrella in red smoke"
-     class="absolute inset-0 h-full w-full object-cover object-[50%_25%] brightness-90 contrast-110" />
+        <img src="../../assets/images/sign-in.jpg" alt="Masked figure holding an umbrella in red smoke"
+          class="absolute inset-0 h-full w-full object-cover object-[50%_25%] brightness-90 contrast-110" />
 
-<!-- Layer 2: strong fade at the bottom so the white title stays readable over the bright smoke,
+        <!-- Layer 2: strong fade at the bottom so the white title stays readable over the bright smoke,
      plus a faint dark wash on the whole photo -->
-<div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-black/10"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-black/10"></div>
         <!-- Layer 3: fade to black at the bottom -->
         <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
 
@@ -139,13 +194,13 @@
             <div>
               <label for="email" class="block text-sm font-bold text-white">Email address</label>
               <input id="email" name="email" type="email" required placeholder="you@example.com"
-                     class="mt-2 w-full rounded-lg border border-white/15 bg-black/70 px-4 py-3 text-white placeholder-gray-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600" />
+                class="mt-2 w-full rounded-lg border border-white/15 bg-black/70 px-4 py-3 text-white placeholder-gray-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600" />
             </div>
 
             <div>
               <label for="password" class="block text-sm font-bold text-white">Password</label>
               <input id="password" name="password" type="password" required minlength="6" placeholder="••••••••"
-                     class="mt-2 w-full rounded-lg border border-white/15 bg-black/70 px-4 py-3 text-white placeholder-gray-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600" />
+                class="mt-2 w-full rounded-lg border border-white/15 bg-black/70 px-4 py-3 text-white placeholder-gray-600 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-600" />
             </div>
 
             <!-- Remember me + forgot password on one row -->
@@ -158,12 +213,13 @@
             </div>
 
             <button type="submit"
-                    class="w-full rounded-full bg-red-600 px-8 py-3 font-bold text-white hover:bg-red-500 transition">
+              class="w-full rounded-full bg-red-600 px-8 py-3 font-bold text-white hover:bg-red-500 transition">
               Access Terminal →
             </button>
 
             <!-- Demo notice: hidden until the form is submitted -->
-            <div id="signin-msg" class="hidden rounded-lg border border-red-600/50 bg-red-950/40 p-4 text-sm text-red-300">
+            <div id="signin-msg"
+              class="hidden rounded-lg border border-red-600/50 bg-red-950/40 p-4 text-sm text-red-300">
               <span class="font-mono font-bold">⚠ DEMO //</span>
               This is a fictional site. No accounts exist and nothing was saved.
             </div>
@@ -176,8 +232,10 @@
 
           <!-- Social buttons (visual only) -->
           <div class="grid grid-cols-2 gap-3">
-            <button type="button" class="rounded-full border border-white/20 px-4 py-2 text-sm hover:border-red-600 hover:text-white transition">Google</button>
-            <button type="button" class="rounded-full border border-white/20 px-4 py-2 text-sm hover:border-red-600 hover:text-white transition">GitHub</button>
+            <button type="button"
+              class="rounded-full border border-white/20 px-4 py-2 text-sm hover:border-red-600 hover:text-white transition">Google</button>
+            <button type="button"
+              class="rounded-full border border-white/20 px-4 py-2 text-sm hover:border-red-600 hover:text-white transition">GitHub</button>
           </div>
 
           <p class="mt-8 text-center text-sm text-gray-500">
@@ -202,7 +260,8 @@
           <div class="blob blob-1 drip p-10 pb-12 text-center" style="--dx:44%; --dh:32px;">
             <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-600/15 text-red-500">
               <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
               </svg>
             </div>
             <h3 class="mt-4 text-lg font-bold text-white">Track your requests</h3>
@@ -213,7 +272,8 @@
           <div class="blob blob-3 drip p-10 pb-12 text-center" style="--dx:54%; --dh:40px;">
             <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-600/15 text-red-500">
               <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
             </div>
@@ -225,7 +285,8 @@
           <div class="blob blob-2 drip p-10 pb-12 text-center" style="--dx:40%; --dh:26px;">
             <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-600/15 text-red-500">
               <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.517 0c.85.493 1.509 1.333 1.509 2.316V18" />
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.517 0c.85.493 1.509 1.333 1.509 2.316V18" />
               </svg>
             </div>
             <h3 class="mt-4 text-lg font-bold text-white">Join the training</h3>
@@ -250,7 +311,8 @@
             I forgot my password. What now?
             <span class="text-2xl text-red-500 transition group-open:rotate-45">+</span>
           </summary>
-          <p class="mt-3 text-sm text-gray-400">Click "Forgot password?" under the form and we would send you a reset link, if accounts were real on this fictional site.</p>
+          <p class="mt-3 text-sm text-gray-400">Click "Forgot password?" under the form and we would send you a reset
+            link, if accounts were real on this fictional site.</p>
         </details>
 
         <details class="group blob blob-soft p-6">
@@ -258,7 +320,8 @@
             Do I need an account to hire you?
             <span class="text-2xl text-red-500 transition group-open:rotate-45">+</span>
           </summary>
-          <p class="mt-3 text-sm text-gray-400">No. Anyone can send a request from the <a href="contact.html" class="text-red-500 hover:text-red-400">Contact page</a>. Accounts only add tracking and reports.</p>
+          <p class="mt-3 text-sm text-gray-400">No. Anyone can send a request from the <a href="contact.html"
+              class="text-red-500 hover:text-red-400">Contact page</a>. Accounts only add tracking and reports.</p>
         </details>
 
       </div>
@@ -316,4 +379,5 @@
     });
   </script>
 </body>
+
 </html>
