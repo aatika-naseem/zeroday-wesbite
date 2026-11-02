@@ -5,62 +5,136 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Threat Log | ZERO//DAY</title>
-    <meta name="description" content="Internal Threat Log and Live Global Intel." />
+    <meta name="description" content="Internal threat radar, vulnerability log and live global intel." />
     <link rel="icon" type="image/svg+xml" href="../../assets/icons/favicon.svg" />
-
-    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Axios CDN (Required for API Integration) -->
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js"></script>
     <style>
-        /* Blob styles for consistency */
-        .blob {
-            background: radial-gradient(circle at 35% 25%, rgba(185, 28, 28, .40), rgba(25, 0, 0, .96) 62%);
-            border: 1px solid rgba(220, 38, 38, .55);
-            box-shadow: 0 0 40px rgba(127, 29, 29, .40), inset 0 0 35px rgba(0, 0, 0, .85);
-            transition: transform .3s ease;
+        body {
+            background: #050203
         }
 
-        .blob:hover {
-            transform: translateY(-2px);
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 60;
+            background: repeating-linear-gradient(0deg, rgba(255, 255, 255, .025) 0 1px, transparent 1px 3px)
         }
 
-        /* Custom Scrollbar for the feed */
-        .custom-scroll::-webkit-scrollbar {
-            width: 4px;
+        .glitch {
+            position: relative;
+            display: inline-block
         }
 
-        .custom-scroll::-webkit-scrollbar-track {
-            background: #0a0a0a;
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-t);
+            position: absolute;
+            inset: 0;
+            overflow: hidden
         }
 
-        .custom-scroll::-webkit-scrollbar-thumb {
+        .glitch::before {
+            color: #22d3ee;
+            left: 2px;
+            clip-path: inset(0 0 55% 0);
+            animation: g1 5s infinite steps(1)
+        }
+
+        .glitch::after {
+            color: #ef4444;
+            left: -2px;
+            clip-path: inset(55% 0 0 0);
+            animation: g1 5s infinite steps(1) reverse
+        }
+
+        @keyframes g1 {
+
+            0%,
+            92%,
+            100% {
+                transform: none;
+                opacity: 0
+            }
+
+            93% {
+                transform: translateX(-3px);
+                opacity: .9
+            }
+
+            95% {
+                transform: translateX(3px);
+                opacity: .9
+            }
+
+            97% {
+                transform: none;
+                opacity: 0
+            }
+        }
+
+        .cur::after {
+            content: "▌";
+            animation: bl 1s steps(1) infinite;
+            color: #ef4444
+        }
+
+        @keyframes bl {
+            50% {
+                opacity: 0
+            }
+        }
+
+        .scroll::-webkit-scrollbar {
+            width: 4px
+        }
+
+        .scroll::-webkit-scrollbar-thumb {
+            background: #dc2626
+        }
+
+        .chip[aria-pressed=true] {
             background: #dc2626;
-            border-radius: 2px;
+            color: #000;
+            border-color: #dc2626
+        }
+
+        :focus-visible {
+            outline: 2px solid #22d3ee;
+            outline-offset: 2px
+        }
+
+        @media (prefers-reduced-motion:reduce) {
+
+            .glitch::before,
+            .glitch::after {
+                display: none
+            }
+
+            * {
+                animation: none !important
+            }
         }
     </style>
 </head>
 
-<body class="bg-black text-gray-300 font-mono min-h-screen flex flex-col">
+<body class="text-gray-300 font-mono min-h-screen flex flex-col">
 
-    <!-- ===== NAVBAR ===== -->
     <nav class="sticky top-0 z-50 bg-black/80 backdrop-blur border-b border-red-600/30">
         <div class="max-w-6xl mx-auto flex items-center justify-between px-4 py-4">
-            <a href="../../index.html" class="font-mono text-2xl font-bold tracking-widest text-white">
-                ZERO<span class="text-red-500">//</span>DAY
-            </a>
+            <a href="../../index.html" class="text-2xl font-bold tracking-widest text-white">ZERO<span
+                    class="text-red-500">//</span>DAY</a>
             <ul class="hidden md:flex items-center gap-6 text-sm uppercase tracking-wider">
                 <li><a href="../../index.html" class="hover:text-white">Home</a></li>
                 <li><a href="about.html" class="hover:text-white">About</a></li>
                 <li><a href="services.html" class="hover:text-white">Services</a></li>
                 <li><a href="contact.html" class="hover:text-white">Contact</a></li>
-                <!-- Active Dashboard Link -->
                 <li><a href="dashboard.html" class="text-white border-b-2 border-red-600 pb-1">Threat Log</a></li>
                 <li><a href="signin.html" class="hover:text-white">Sign In</a></li>
             </ul>
-            <button id="menu-btn" class="md:hidden text-3xl text-white">☰</button>
+            <button id="menu-btn" class="md:hidden text-3xl text-white" aria-label="Menu">☰</button>
         </div>
         <ul id="mobile-menu" class="hidden md:hidden flex-col gap-3 px-4 pb-4 text-sm uppercase tracking-wider">
             <li><a href="../../index.html">Home</a></li>
@@ -72,348 +146,362 @@
         </ul>
     </nav>
 
-    <main class="flex-grow max-w-6xl mx-auto px-4 py-12 w-full">
+    <main class="flex-grow max-w-6xl mx-auto px-4 py-10 w-full">
 
-        <!-- PAGE HEADER -->
-        <div class="mb-10 border-b border-red-900/50 pb-6">
-            <h1 class="text-3xl md:text-5xl font-bold text-white mb-2">Internal Threat Log</h1>
-            <p class="text-red-500 font-mono text-sm tracking-widest">&gt; SECURE_TERMINAL_ACTIVE</p>
-        </div>
+        <header class="mb-8">
+            <h1 class="text-4xl md:text-6xl font-bold text-white"><span class="glitch" data-t="Threat Radar">Threat
+                    Radar</span></h1>
+            <p id="boot" class="cur text-sm text-red-500 mt-3 h-5"></p>
+        </header>
 
-        <div class="grid lg:grid-cols-3 gap-8">
+        <!-- HUD stats -->
+        <section id="hud" class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8" aria-label="Summary"></section>
 
-            <!-- ========================================== -->
-            <!-- TASK 1: CRUD APPLICATION                   -->
-            <!-- ========================================== -->
-            <div class="lg:col-span-2 space-y-8">
+        <div class="grid lg:grid-cols-5 gap-8">
 
-                <!-- Form (Create / Update) -->
-                <div class="bg-neutral-950 border border-red-900/30 p-6 rounded-lg relative overflow-hidden">
-                    <!-- Decorative terminal dots -->
-                    <div class="absolute top-3 right-3 flex gap-1">
-                        <div class="w-2 h-2 rounded-full bg-red-600"></div>
-                        <div class="w-2 h-2 rounded-full bg-yellow-600"></div>
-                        <div class="w-2 h-2 rounded-full bg-green-600"></div>
-                    </div>
+            <!-- LEFT: radar + CRUD -->
+            <div class="lg:col-span-3 space-y-8">
 
-                    <h2 class="text-xl font-bold text-white mb-6 uppercase tracking-wider flex items-center gap-2">
-                        <span class="text-red-500">►</span> <span id="form-title">Log New Vulnerability</span>
-                    </h2>
-
-                    <form id="target-form" class="space-y-5">
-                        <input type="hidden" id="target-id" />
-
-                        <div class="grid md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs text-gray-500 mb-1 tracking-widest">TARGET_NAME</label>
-                                <input type="text" id="target-name" required
-                                    class="w-full bg-black border border-gray-700 text-white px-3 py-2 focus:border-red-500 focus:outline-none font-mono text-sm"
-                                    placeholder="e.g. Acme Corp" />
-                            </div>
-                            <div>
-                                <label class="block text-xs text-gray-500 mb-1 tracking-widest">SEVERITY_LEVEL</label>
-                                <select id="target-level"
-                                    class="w-full bg-black border border-gray-700 text-white px-3 py-2 focus:border-red-500 focus:outline-none font-mono text-sm">
-                                    <option value="Low">LOW (Green)</option>
-                                    <option value="Medium">MEDIUM (Yellow)</option>
-                                    <option value="High">HIGH (Orange)</option>
-                                    <option value="Critical">CRITICAL (Red)</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label
-                                class="block text-xs text-gray-500 mb-1 tracking-widest">VULNERABILITY_DETAILS</label>
-                            <textarea id="target-notes" required rows="3"
-                                class="w-full bg-black border border-gray-700 text-white px-3 py-2 focus:border-red-500 focus:outline-none font-mono text-sm"
-                                placeholder="Describe the exploit vector..."></textarea>
-                        </div>
-
-                        <div class="flex gap-4 pt-2">
-                            <button type="submit" id="submit-btn"
-                                class="bg-red-600 text-black px-6 py-2 font-bold hover:bg-red-500 transition font-mono tracking-widest text-sm">EXECUTE_ADD</button>
-                            <button type="button" id="cancel-btn"
-                                class="hidden text-gray-400 hover:text-white px-4 py-2 font-mono text-sm border border-gray-800 hover:border-white transition">CANCEL_EDIT</button>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- List & Search (Read / Filter) -->
-                <div>
-                    <div class="flex flex-col md:flex-row justify-between items-end mb-4 gap-4">
-                        <h2 class="text-xl font-bold text-white uppercase tracking-wider">Logged Vulnerabilities</h2>
-                        <!-- Search Bar -->
-                        <div class="w-full md:w-auto relative">
-                            <input type="text" id="search-input" placeholder="Search database..."
-                                class="w-full md:w-64 bg-black border border-red-900/50 text-white px-3 py-2 text-sm focus:border-red-500 focus:outline-none font-mono tracking-wider placeholder-gray-700" />
-                            <span class="absolute right-3 top-2 text-red-900">⌕</span>
-                        </div>
-                    </div>
-
-                    <!-- Where records will be injected -->
-                    <div id="target-list" class="space-y-4">
-                        <!-- Cards go here via JS -->
+                <!-- Radar: the memorable element -->
+                <div class="border border-red-900/40 bg-black p-4 flex flex-col md:flex-row gap-4 items-center">
+                    <canvas id="radar" width="340" height="340" class="w-full max-w-[340px] shrink-0"
+                        aria-label="Radar of logged vulnerabilities. Closer to centre means more severe."></canvas>
+                    <div class="text-xs space-y-2 text-gray-400 leading-relaxed">
+                        <p class="text-white text-sm">Every record is a blip.</p>
+                        <p>The closer to the centre, the more severe. Click a blip to edit it. Exploited targets pulse.
+                        </p>
+                        <p id="radar-readout" class="text-cyan-300 min-h-[2.5rem]">&gt; hover a blip for details</p>
                     </div>
                 </div>
 
+                <!-- Form -->
+                <form id="form" class="border border-red-900/40 bg-neutral-950 p-5 space-y-4" novalidate>
+                    <h2 class="text-lg font-bold text-white"><span class="text-red-500">►</span> <span
+                            id="form-title">Log a vulnerability</span></h2>
+                    <input type="hidden" id="f-id" />
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <label class="text-xs text-gray-500">Target name
+                            <input id="f-name"
+                                class="mt-1 w-full bg-black border border-gray-700 text-white px-3 py-2 text-sm focus:border-red-500 focus:outline-none"
+                                placeholder="Acme Corp login portal" /></label>
+                        <label class="text-xs text-gray-500">CVE ID (optional)
+                            <input id="f-cve"
+                                class="mt-1 w-full bg-black border border-gray-700 text-white px-3 py-2 text-sm focus:border-red-500 focus:outline-none"
+                                placeholder="CVE-2026-12345" /></label>
+                        <label class="text-xs text-gray-500">Severity
+                            <select id="f-level"
+                                class="mt-1 w-full bg-black border border-gray-700 text-white px-3 py-2 text-sm focus:border-red-500 focus:outline-none">
+                                <option>Low</option>
+                                <option selected>Medium</option>
+                                <option>High</option>
+                                <option>Critical</option>
+                            </select></label>
+                        <label class="text-xs text-gray-500">Status
+                            <select id="f-status"
+                                class="mt-1 w-full bg-black border border-gray-700 text-white px-3 py-2 text-sm focus:border-red-500 focus:outline-none">
+                                <option>Open</option>
+                                <option>Exploited</option>
+                                <option>Patched</option>
+                            </select></label>
+                    </div>
+                    <label class="block text-xs text-gray-500">Exploit vector
+                        <textarea id="f-notes" rows="3"
+                            class="mt-1 w-full bg-black border border-gray-700 text-white px-3 py-2 text-sm focus:border-red-500 focus:outline-none"
+                            placeholder="Unsanitised search parameter allows SQL injection"></textarea></label>
+                    <p id="f-err" class="text-red-500 text-xs min-h-[1rem]" role="alert"></p>
+                    <div class="flex gap-3">
+                        <button id="f-submit"
+                            class="bg-red-600 text-black px-6 py-2 font-bold text-sm hover:bg-red-500">Add to
+                            log</button>
+                        <button type="button" id="f-cancel"
+                            class="hidden px-4 py-2 text-sm border border-gray-700 hover:border-white">Cancel
+                            edit</button>
+                    </div>
+                </form>
+
+                <!-- List -->
+                <section>
+                    <div class="flex flex-col md:flex-row md:items-end justify-between gap-3 mb-3">
+                        <h2 class="text-lg font-bold text-white">Logged vulnerabilities <span id="count"
+                                class="text-gray-600 text-sm"></span></h2>
+                        <div class="flex gap-2">
+                            <button id="export"
+                                class="text-xs border border-gray-700 px-3 py-2 hover:border-white">Export JSON</button>
+                            <button id="wipe"
+                                class="text-xs border border-red-900 text-red-500 px-3 py-2 hover:border-red-500">Wipe
+                                log</button>
+                        </div>
+                    </div>
+                    <input id="search" type="search" placeholder="Search name, CVE, status or notes..."
+                        class="w-full bg-black border border-red-900/50 text-white px-3 py-2 text-sm focus:border-red-500 focus:outline-none mb-3" />
+                    <div id="chips" class="flex flex-wrap gap-2 mb-4"></div>
+                    <div id="list" class="space-y-3"></div>
+                </section>
             </div>
 
-            <!-- ========================================== -->
-            <!-- TASK 2: AXIOS API INTEGRATION              -->
-            <!-- ========================================== -->
-            <div class="lg:col-span-1">
-                <div class="bg-neutral-950 border border-red-900/30 p-5 rounded-lg sticky top-24">
-                    <div class="flex items-center justify-between mb-4 border-b border-gray-800 pb-2">
-                        <h2 class="text-sm font-bold text-white uppercase tracking-widest flex items-center gap-2">
-                            <span class="w-2 h-2 bg-red-500 rounded-full animate-ping"></span>
-                            Global Intel Feed
-                        </h2>
-                        <span class="text-[10px] text-gray-600">AXIOS_GET</span>
+            <!-- RIGHT: Axios intel -->
+            <aside class="lg:col-span-2">
+                <div class="border border-red-900/40 bg-neutral-950 p-4 lg:sticky lg:top-24">
+                    <div class="flex items-center justify-between mb-3">
+                        <h2 class="text-sm font-bold text-white flex items-center gap-2"><span
+                                class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>Global intel</h2>
+                        <span class="text-[10px] text-gray-600">axios.get</span>
                     </div>
-
-                    <!-- Loading State -->
-                    <div id="api-loading" class="text-center py-8 text-red-500 animate-pulse text-xs tracking-widest">
-                        [ ESTABLISHING_UPLINK... ]
+                    <div id="tabs" class="flex gap-1 mb-4 text-xs" role="tablist">
+                        <button role="tab" data-tab="news" class="flex-1 border border-gray-700 py-2">Security
+                            news</button>
+                        <button role="tab" data-tab="cve" class="flex-1 border border-gray-700 py-2">Fresh CVEs</button>
+                        <button role="tab" data-tab="ip" class="flex-1 border border-gray-700 py-2">My uplink</button>
                     </div>
-
-                    <!-- Error State -->
-                    <div id="api-error"
-                        class="hidden text-center py-8 text-red-800 text-xs border border-red-900/50 bg-red-950/20">
-                        [ ERROR: UPLINK_FAILED ]
-                    </div>
-
-                    <!-- Data Container -->
-                    <div id="api-data" class="hidden space-y-3 max-h-[600px] overflow-y-auto custom-scroll pr-2">
-                        <!-- API results go here -->
-                    </div>
+                    <div id="feed" class="max-h-[560px] overflow-y-auto scroll pr-1 text-xs" aria-live="polite"></div>
                 </div>
-            </div>
-
+            </aside>
         </div>
     </main>
 
-    <!-- FOOTER -->
-    <footer class="border-t border-red-600/30 bg-black mt-12 py-6 text-center text-xs text-gray-600">
-        © 2026 ZERO//DAY. Internal Systems.
-    </footer>
+    <footer class="border-t border-red-600/30 bg-black mt-10 py-6 text-center text-xs text-gray-600">© 2026 ZERO//DAY.
+        Internal systems.</footer>
 
-    <!-- ========================================== -->
-    <!-- JAVASCRIPT LOGIC                           -->
-    <!-- ========================================== -->
     <script>
-        // Mobile Menu
-        document.getElementById("menu-btn").addEventListener("click", function () {
-            document.getElementById("mobile-menu").classList.toggle("hidden");
-        });
+        const $ = id => document.getElementById(id);
+        const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        const KEY = 'zeroday_targets_v2';
+        const LEVELS = ['Critical', 'High', 'Medium', 'Low'];
+        const COL = { Critical: '#ef4444', High: '#fb923c', Medium: '#facc15', Low: '#4ade80' };
+        const RAD = { Critical: .2, High: .44, Medium: .67, Low: .88 };
+        const STATUS = ['Open', 'Exploited', 'Patched'];
 
-        // ==========================================
-        // TASK 1: CRUD & LOCAL STORAGE
-        // ==========================================
-        const form = document.getElementById('target-form');
-        const idInput = document.getElementById('target-id');
-        const nameInput = document.getElementById('target-name');
-        const levelInput = document.getElementById('target-level');
-        const notesInput = document.getElementById('target-notes');
-        const listContainer = document.getElementById('target-list');
-        const searchInput = document.getElementById('search-input');
-        const formTitle = document.getElementById('form-title');
-        const submitBtn = document.getElementById('submit-btn');
-        const cancelBtn = document.getElementById('cancel-btn');
+        $('menu-btn').onclick = () => $('mobile-menu').classList.toggle('hidden');
 
-        // 1. Initialize array from LocalStorage
-        let targets = JSON.parse(localStorage.getItem('zeroday_targets')) || [];
+        // ---------- boot line ----------
+        (function boot() {
+            const msg = '> uplink established. radar armed. waiting for targets...';
+            let i = 0; const el = $('boot');
+            (function t() { el.textContent = msg.slice(0, ++i); if (i < msg.length) setTimeout(t, 28); })();
+        })();
 
-        // 2. Read/Display Function
-        function renderTargets(filterText = "") {
-            listContainer.innerHTML = "";
+        // ---------- state + Local Storage ----------
+        let targets = [];
+        try { targets = JSON.parse(localStorage.getItem(KEY)) || []; } catch { targets = []; }
+        let query = '', levelFilter = 'All', hover = null;
+        const save = () => { try { localStorage.setItem(KEY, JSON.stringify(targets)); } catch (e) { console.error(e); } };
 
-            // Filter Logic
-            const filteredTargets = targets.filter(target =>
-                target.name.toLowerCase().includes(filterText.toLowerCase()) ||
-                target.level.toLowerCase().includes(filterText.toLowerCase())
-            );
+        // ---------- render ----------
+        function visible() {
+            const q = query.toLowerCase();
+            return targets.filter(t =>
+                (levelFilter === 'All' || t.level === levelFilter) &&
+                [t.name, t.cve, t.status, t.notes].some(f => (f || '').toLowerCase().includes(q)));
+        }
 
-            if (filteredTargets.length === 0) {
-                listContainer.innerHTML = `<p class="text-gray-600 text-sm italic border border-gray-800 p-4 text-center">NO_RECORDS_FOUND</p>`;
+        function renderHud() {
+            const crit = targets.filter(t => t.level === 'Critical').length;
+            const exp = targets.filter(t => t.status === 'Exploited').length;
+            const patched = targets.filter(t => t.status === 'Patched').length;
+            const pct = targets.length ? Math.round(patched / targets.length * 100) : 0;
+            const cell = (n, l, c = 'text-white') => `<div class="border border-red-900/40 bg-black p-3"><div class="text-3xl font-bold ${c}">${n}</div><div class="text-[11px] text-gray-500 mt-1">${l}</div></div>`;
+            $('hud').innerHTML = cell(targets.length, 'targets logged') + cell(crit, 'critical', 'text-red-500') +
+                cell(exp, 'actively exploited', exp ? 'text-orange-400' : 'text-white') + cell(pct + '%', 'patched', 'text-green-400');
+        }
+
+        function renderChips() {
+            $('chips').innerHTML = ['All', ...LEVELS].map(l =>
+                `<button class="chip text-xs border border-gray-700 px-3 py-1" data-level="${l}" aria-pressed="${l === levelFilter}">${l}</button>`).join('');
+        }
+
+        function renderList() {
+            const rows = visible();
+            $('count').textContent = `(${rows.length}/${targets.length})`;
+            if (!rows.length) {
+                $('list').innerHTML = `<p class="border border-gray-800 p-6 text-center text-gray-500 text-sm">${targets.length ? 'No records match this filter. Clear the search or pick All.' : 'The log is empty. Add a target above, or import a CVE from the intel panel.'}</p>`;
                 return;
             }
-
-            // Map Logic to build UI
-            filteredTargets.map(target => {
-                const div = document.createElement('div');
-
-                // Dynamic border color based on severity
-                let borderColor = "border-green-900/50";
-                let textColor = "text-green-400";
-                if (target.level === "Medium") { borderColor = "border-yellow-900/50"; textColor = "text-yellow-400"; }
-                if (target.level === "High") { borderColor = "border-orange-900/50"; textColor = "text-orange-400"; }
-                if (target.level === "Critical") { borderColor = "border-red-900/80"; textColor = "text-red-500 animate-pulse"; }
-
-                div.className = `bg-black border ${borderColor} p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 transition hover:bg-neutral-900`;
-
-                div.innerHTML = `
-          <div class="flex-grow">
-            <div class="flex items-center gap-3 mb-1">
-              <h3 class="font-bold text-white text-lg tracking-wider">${target.name}</h3>
-              <span class="text-[10px] ${textColor} border border-current px-2 py-0.5 rounded tracking-widest">${target.level}</span>
-            </div>
-            <p class="text-xs text-gray-400 font-mono leading-relaxed">&gt; ${target.notes}</p>
-          </div>
-          <div class="flex gap-2 w-full md:w-auto">
-            <button onclick="editTarget('${target.id}')" class="flex-1 md:flex-none text-gray-400 hover:text-white px-3 py-1.5 text-xs border border-gray-700 hover:border-white transition tracking-widest">EDIT</button>
-            <button onclick="deleteTarget('${target.id}')" class="flex-1 md:flex-none text-red-500 hover:text-red-400 px-3 py-1.5 text-xs border border-red-900 hover:border-red-500 transition tracking-widest">PURGE</button>
-          </div>
-        `;
-                listContainer.appendChild(div);
-            });
+            $('list').innerHTML = rows.map(t => `
+    <article class="bg-black border border-gray-800 hover:bg-neutral-900 flex" style="border-left:4px solid ${COL[t.level]}">
+      <div class="p-4 flex-grow min-w-0">
+        <div class="flex flex-wrap items-center gap-2 mb-1">
+          <h3 class="font-bold text-white">${esc(t.name)}</h3>
+          <span class="text-[10px] border px-2" style="color:${COL[t.level]}">${t.level}</span>
+          ${t.cve ? `<span class="text-[10px] text-cyan-300">${esc(t.cve)}</span>` : ''}
+        </div>
+        <p class="text-xs text-gray-400 break-words">${esc(t.notes)}</p>
+      </div>
+      <div class="p-3 flex flex-col gap-1 w-28 shrink-0">
+        <button data-act="status" data-id="${t.id}" class="text-[11px] border border-gray-700 py-1 hover:border-white ${t.status === 'Exploited' ? 'text-orange-400' : t.status === 'Patched' ? 'text-green-400' : ''}" title="Click to change status">${t.status}</button>
+        <button data-act="edit" data-id="${t.id}" class="text-[11px] border border-gray-700 py-1 hover:border-white">Edit</button>
+        <button data-act="del" data-id="${t.id}" class="text-[11px] border border-red-900 text-red-500 py-1 hover:border-red-500">Delete</button>
+      </div>
+    </article>`).join('');
         }
 
-        // 3. Create & Update Function
-        form.addEventListener('submit', (e) => {
+        function refresh() { renderHud(); renderChips(); renderList(); }
+
+        // ---------- CRUD ----------
+        function resetForm() {
+            $('form').reset(); $('f-id').value = ''; $('f-err').textContent = '';
+            $('form-title').textContent = 'Log a vulnerability'; $('f-submit').textContent = 'Add to log';
+            $('f-cancel').classList.add('hidden');
+        }
+
+        $('form').addEventListener('submit', e => {
             e.preventDefault();
-
-            const id = idInput.value;
-            const name = nameInput.value;
-            const level = levelInput.value;
-            const notes = notesInput.value;
-
-            if (id) {
-                // Update
-                targets = targets.map(t => t.id === id ? { ...t, name, level, notes } : t);
-            } else {
-                // Create
-                targets.push({ id: Date.now().toString(), name, level, notes });
-            }
-
-            // Save to LocalStorage
-            localStorage.setItem('zeroday_targets', JSON.stringify(targets));
-
-            // Reset Form
-            form.reset();
-            idInput.value = "";
-            formTitle.textContent = "Log New Vulnerability";
-            submitBtn.textContent = "EXECUTE_ADD";
-            submitBtn.classList.remove('bg-green-600', 'hover:bg-green-500');
-            submitBtn.classList.add('bg-red-600', 'hover:bg-red-500');
-            cancelBtn.classList.add('hidden');
-
-            renderTargets(searchInput.value);
+            const rec = {
+                name: $('f-name').value.trim(), cve: $('f-cve').value.trim().toUpperCase(),
+                level: $('f-level').value, status: $('f-status').value, notes: $('f-notes').value.trim()
+            };
+            const id = $('f-id').value;
+            if (![rec.name, rec.notes].every(v => v.length)) { $('f-err').textContent = 'Name and exploit vector are required.'; return; }
+            if (rec.cve && !/^CVE-\d{4}-\d{4,}$/.test(rec.cve)) { $('f-err').textContent = 'CVE ID must look like CVE-2026-12345.'; return; }
+            if (targets.some(t => t.id !== id && t.name.toLowerCase() === rec.name.toLowerCase())) { $('f-err').textContent = 'A target with this name is already logged.'; return; }
+            if (id) targets = targets.map(t => t.id === id ? { ...t, ...rec } : t);
+            else targets.push({ id: Date.now().toString(), ...rec });
+            save(); resetForm(); refresh();
         });
 
-        // 4. Edit Function
-        window.editTarget = (id) => {
-            const target = targets.find(t => t.id === id);
-            if (!target) return;
+        $('f-cancel').onclick = resetForm;
 
-            idInput.value = target.id;
-            nameInput.value = target.name;
-            levelInput.value = target.level;
-            notesInput.value = target.notes;
+        function editTarget(id) {
+            const t = targets.find(x => x.id === id); if (!t) return;
+            $('f-id').value = t.id; $('f-name').value = t.name; $('f-cve').value = t.cve || '';
+            $('f-level').value = t.level; $('f-status').value = t.status; $('f-notes').value = t.notes;
+            $('form-title').textContent = 'Update record'; $('f-submit').textContent = 'Save changes';
+            $('f-cancel').classList.remove('hidden');
+            $('form').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
 
-            formTitle.textContent = "Update Vulnerability Data";
-            submitBtn.textContent = "EXECUTE_UPDATE";
-            submitBtn.classList.remove('bg-red-600', 'hover:bg-red-500');
-            submitBtn.classList.add('bg-green-600', 'hover:bg-green-500');
-            cancelBtn.classList.remove('hidden');
+        $('list').addEventListener('click', e => {
+            const b = e.target.closest('button[data-act]'); if (!b) return;
+            const { act, id } = b.dataset;
+            if (act === 'edit') return editTarget(id);
+            if (act === 'del' && confirm('Delete this record? This cannot be undone.')) targets = targets.filter(t => t.id !== id);
+            if (act === 'status') targets = targets.map(t => t.id === id ? { ...t, status: STATUS[(STATUS.indexOf(t.status) + 1) % STATUS.length] } : t);
+            save(); refresh();
+        });
 
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        $('search').addEventListener('input', e => { query = e.target.value; renderList(); $('count'); });
+        $('chips').addEventListener('click', e => { const b = e.target.closest('[data-level]'); if (b) { levelFilter = b.dataset.level; refresh(); } });
+        $('wipe').onclick = () => { if (targets.length && confirm('Wipe the entire log?')) { targets = []; save(); refresh(); } };
+        $('export').onclick = () => {
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(new Blob([JSON.stringify(targets, null, 2)], { type: 'application/json' }));
+            a.download = 'zeroday-threat-log.json'; a.click(); URL.revokeObjectURL(a.href);
         };
 
-        // Cancel Edit
-        cancelBtn.addEventListener('click', () => {
-            form.reset();
-            idInput.value = "";
-            formTitle.textContent = "Log New Vulnerability";
-            submitBtn.textContent = "EXECUTE_ADD";
-            submitBtn.classList.remove('bg-green-600', 'hover:bg-green-500');
-            submitBtn.classList.add('bg-red-600', 'hover:bg-red-500');
-            cancelBtn.classList.add('hidden');
-        });
+        // ---------- Radar ----------
+        const cv = $('radar'), ctx = cv.getContext('2d'), W = cv.width, C = W / 2, R = C - 14;
+        const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const angOf = t => ((Number(String(t.id).slice(-7)) * 137.508) % 360) * Math.PI / 180;
+        const posOf = t => { const a = angOf(t), r = R * (RAD[t.level] + ((Number(String(t.id).slice(-3)) % 9) - 4) * .012); return { x: C + Math.cos(a) * r, y: C + Math.sin(a) * r, a }; };
 
-        // 5. Delete Function
-        window.deleteTarget = (id) => {
-            if (confirm("WARNING: PURGE RECORD? THIS CANNOT BE UNDONE.")) {
-                targets = targets.filter(t => t.id !== id);
-                localStorage.setItem('zeroday_targets', JSON.stringify(targets));
-                renderTargets(searchInput.value);
+        function drawRadar(ts = 0) {
+            ctx.clearRect(0, 0, W, W);
+            ctx.strokeStyle = 'rgba(220,38,38,.28)'; ctx.lineWidth = 1;
+            for (let i = 1; i <= 4; i++) { ctx.beginPath(); ctx.arc(C, C, R * i / 4, 0, 7); ctx.stroke(); }
+            ctx.beginPath(); ctx.moveTo(C - R, C); ctx.lineTo(C + R, C); ctx.moveTo(C, C - R); ctx.lineTo(C, C + R); ctx.stroke();
+            const sw = reduce ? 0 : (ts / 3500) % (Math.PI * 2);
+            for (let i = 0; i < 28; i++) { // fading sweep trail
+                ctx.beginPath(); ctx.moveTo(C, C); ctx.arc(C, C, R, sw - i * .03 - .03, sw - i * .03);
+                ctx.fillStyle = `rgba(34,211,238,${.16 - i * .0057})`; ctx.fill();
             }
-        };
-
-        // 6. Search Event
-        searchInput.addEventListener('input', (e) => {
-            renderTargets(e.target.value);
+            ctx.strokeStyle = '#22d3ee'; ctx.beginPath(); ctx.moveTo(C, C); ctx.lineTo(C + Math.cos(sw) * R, C + Math.sin(sw) * R); ctx.stroke();
+            targets.forEach(t => {
+                const p = posOf(t);
+                let d = (sw - p.a) % (Math.PI * 2); if (d < 0) d += Math.PI * 2;
+                const glow = Math.max(0, 1 - d / 2.2);
+                const pulse = t.status === 'Exploited' ? 3 + Math.sin(ts / 200) * 2 : 0;
+                ctx.globalAlpha = t.status === 'Patched' ? .35 : .45 + glow * .55;
+                ctx.fillStyle = COL[t.level]; ctx.beginPath(); ctx.arc(p.x, p.y, 4 + glow * 2 + pulse, 0, 7); ctx.fill();
+                if (hover === t.id) { ctx.globalAlpha = 1; ctx.strokeStyle = '#fff'; ctx.beginPath(); ctx.arc(p.x, p.y, 10, 0, 7); ctx.stroke(); }
+            });
+            ctx.globalAlpha = 1;
+            requestAnimationFrame(drawRadar);
+        }
+        function blipAt(ev) {
+            const r = cv.getBoundingClientRect(), s = W / r.width, x = (ev.clientX - r.left) * s, y = (ev.clientY - r.top) * s;
+            return targets.find(t => { const p = posOf(t); return Math.hypot(p.x - x, p.y - y) < 12; });
+        }
+        cv.addEventListener('mousemove', e => {
+            const t = blipAt(e); hover = t ? t.id : null; cv.style.cursor = t ? 'pointer' : 'default';
+            $('radar-readout').textContent = t ? `> ${t.name} | ${t.level} | ${t.status}` : '> hover a blip for details';
         });
+        cv.addEventListener('click', e => { const t = blipAt(e); if (t) editTarget(t.id); });
+        requestAnimationFrame(drawRadar);
 
-        // Initial Render
-        renderTargets();
+        // ---------- Axios intel feeds ----------
+        const cache = {};
+        let cveItems = [];
+        const feedBox = $('feed');
+        const safeUrl = u => /^https?:\/\//i.test(u || '') ? u : '#';
 
-
-        // ==========================================
-        // TASK 2: AXIOS API INTEGRATION (IP RECON)
-        // ==========================================
-        async function fetchThreatIntel() {
-            const loading = document.getElementById('api-loading');
-            const error = document.getElementById('api-error');
-            const dataContainer = document.getElementById('api-data');
-
+        async function loadFeed(tab, force = false) {
+            document.querySelectorAll('#tabs button').forEach(b => {
+                const on = b.dataset.tab === tab; b.setAttribute('aria-selected', on);
+                b.classList.toggle('bg-red-600', on); b.classList.toggle('text-black', on);
+            });
+            if (cache[tab] && !force) { feedBox.innerHTML = cache[tab]; return; }
+            feedBox.innerHTML = '<p class="text-red-500 animate-pulse text-center py-8">[ establishing uplink... ]</p>';
             try {
-                // Fetching REAL network data using ipwho.is
-                const response = await axios.get('https://ipwho.is/');
-
-                loading.classList.add('hidden');
-                dataContainer.classList.remove('hidden');
-                dataContainer.innerHTML = '';
-
-                const data = response.data;
-
-                // Build the "Terminal Scan" UI
-                dataContainer.innerHTML = `
-          <div class="border border-red-900/30 bg-black p-4 rounded text-xs space-y-3 font-mono">
-            
-            <div class="flex justify-between border-b border-gray-800 pb-2">
-              <span class="text-gray-500">TARGET_IP:</span>
-              <span class="text-red-500 font-bold animate-pulse">${data.ip}</span>
-            </div>
-
-            <div class="flex justify-between border-b border-gray-800 pb-2">
-              <span class="text-gray-500">LOCATION:</span>
-              <span class="text-gray-300">${data.city}, ${data.country}</span>
-            </div>
-
-            <div class="flex justify-between border-b border-gray-800 pb-2">
-              <span class="text-gray-500">ISP_PROVIDER:</span>
-              <span class="text-gray-300 truncate max-w-[150px] text-right">${data.connection.isp}</span>
-            </div>
-
-            <div class="flex justify-between border-b border-gray-800 pb-2">
-              <span class="text-gray-500">ASN_CODE:</span>
-              <span class="text-gray-300">${data.connection.asn}</span>
-            </div>
-
-            <div class="flex justify-between pb-1">
-              <span class="text-gray-500">STATUS:</span>
-              <span class="text-green-500 font-bold">[ SECURE ]</span>
-            </div>
-
-            <div class="mt-4 pt-3 border-t border-red-900/50">
-              <p class="text-gray-600 text-[10px] leading-tight">
-                &gt; Traceroute complete. Firewall bypassed. Target network mapped successfully. No anomalies detected.
-              </p>
-            </div>
-          </div>
-        `;
-
+                let html = '';
+                if (tab === 'news') {
+                    const { data: ids } = await axios.get('https://hacker-news.firebaseio.com/v0/topstories.json');
+                    const items = await Promise.all(ids.slice(0, 40).map(id => axios.get(`https://hacker-news.firebaseio.com/v0/item/${id}.json`).then(r => r.data)));
+                    const kw = /secur|vuln|exploit|hack|breach|malware|cve|ransom|crypto|privacy|zero-day|attack/i;
+                    const hits = items.filter(i => i && i.title && kw.test(i.title));
+                    const shown = (hits.length >= 4 ? hits : items.filter(Boolean)).slice(0, 8);
+                    html = shown.map(i => `<a href="${esc(safeUrl(i.url))}" target="_blank" rel="noopener noreferrer" class="block border border-gray-800 p-3 mb-2 hover:border-red-500">
+        <p class="text-white">${esc(i.title)}</p><p class="text-gray-500 mt-1">${i.score} pts by ${esc(i.by)}</p></a>`).join('');
+                }
+                if (tab === 'cve') {
+                    const { data } = await axios.get('https://vulnerability.circl.lu/api/last');
+                    const arr = Array.isArray(data) ? data : (data.results || data.vulnerabilities || []);
+                    cveItems = arr.slice(0, 12).map(it => {
+                        const m = (it?.containers?.cna?.metrics || []).map(x => Object.values(x).find(v => v && v.baseScore)).find(Boolean);
+                        return {
+                            id: it?.cveMetadata?.cveId || it?.id || it?.document?.tracking?.id || 'Unknown ID',
+                            desc: it?.containers?.cna?.descriptions?.[0]?.value || it?.summary || it?.details || 'No description published yet.',
+                            score: m?.baseScore ?? null
+                        };
+                    });
+                    if (!cveItems.length) throw new Error('empty');
+                    html = cveItems.map((c, i) => `<div class="border border-gray-800 p-3 mb-2">
+        <div class="flex justify-between"><span class="text-cyan-300">${esc(c.id)}</span><span class="text-orange-400">${c.score ?? 'n/a'}</span></div>
+        <p class="text-gray-400 mt-1 line-clamp-3">${esc(c.desc)}</p>
+        <button data-import="${i}" class="mt-2 border border-red-900 text-red-500 px-2 py-1 hover:border-red-500">Import to log</button></div>`).join('');
+                }
+                if (tab === 'ip') {
+                    const { data: d } = await axios.get('https://ipwho.is/');
+                    if (!d.success) throw new Error(d.message || 'lookup failed');
+                    const row = (k, v) => `<div class="flex justify-between border-b border-gray-800 py-2"><span class="text-gray-500">${k}</span><span class="text-gray-200 text-right truncate max-w-[60%]">${esc(v)}</span></div>`;
+                    html = row('IP address', d.ip) + row('Type', d.type) + row('Location', `${d.city ?? '?'}, ${d.country ?? '?'}`) +
+                        row('ISP', d.connection?.isp ?? 'unknown') + row('ASN', d.connection?.asn ?? 'unknown') + row('Timezone', d.timezone?.id ?? 'unknown') +
+                        `<p class="text-gray-600 mt-3">This is what every site you visit can see about you without asking.</p>`;
+                }
+                cache[tab] = html; feedBox.innerHTML = html;
             } catch (err) {
-                loading.classList.add('hidden');
-                error.classList.remove('hidden');
-                console.error("API Error:", err);
+                console.error(err);
+                feedBox.innerHTML = `<div class="border border-red-900/60 bg-red-950/20 p-4 text-center">
+      <p class="text-red-500">Could not reach this source.</p>
+      <p class="text-gray-500 mt-1">It may be rate-limited or blocking browser requests.</p>
+      <button id="retry" class="mt-3 border border-red-500 text-red-500 px-3 py-1 hover:bg-red-600 hover:text-black">Retry</button></div>`;
+                $('retry').onclick = () => loadFeed(tab, true);
             }
         }
 
-        // Call the API
-        fetchThreatIntel();
+        $('tabs').addEventListener('click', e => { const b = e.target.closest('[data-tab]'); if (b) loadFeed(b.dataset.tab); });
+        feedBox.addEventListener('click', e => {
+            const b = e.target.closest('[data-import]'); if (!b) return;
+            const c = cveItems[Number(b.dataset.import)]; if (!c) return;
+            if (targets.some(t => t.cve === c.id)) { b.textContent = 'Already in log'; return; }
+            const s = c.score;
+            targets.push({
+                id: Date.now().toString(), name: c.id, cve: /^CVE-/.test(c.id) ? c.id : '',
+                level: s >= 9 ? 'Critical' : s >= 7 ? 'High' : s >= 4 ? 'Medium' : 'Low', status: 'Open', notes: c.desc.slice(0, 240)
+            });
+            save(); refresh(); b.textContent = 'Imported'; b.disabled = true;
+        });
 
+        refresh();
+        loadFeed('news');
     </script>
 </body>
 
